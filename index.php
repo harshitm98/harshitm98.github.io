@@ -1,9 +1,8 @@
-<!DOCTYPE html>
 <html>
 <head>
 	<title>Harshit Maheshwari</title>
 </head>
 <body>
-		<h1>Hello stalker!</h1>
+		<?php echo "Hello world"; ?>
 </body>
 </html>
