@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Harshit Maheshwari</title>
-    <link>https://harshitm98.github.io/</link>
-    <description>Recent content on Harshit Maheshwari</description>
+    <title>writeup on Harshit Maheshwari</title>
+    <link>https://harshitm98.github.io/tags/writeup/</link>
+    <description>Recent content in writeup on Harshit Maheshwari</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
-    <lastBuildDate>Mon, 27 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://harshitm98.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 27 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://harshitm98.github.io/tags/writeup/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>HTB Gunship - Writeup</title>
       <link>https://harshitm98.github.io/posts/htb-challenge-gunship/</link>

