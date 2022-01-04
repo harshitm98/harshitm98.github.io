@@ -17,8 +17,7 @@
       <description>Access details -&amp;gt; 159.65.31.1:32618
 We are provided with a website which has only one input field and we have the source code available.
 So let&amp;rsquo;s go through the source code which is made available to us.
-Quick Recon   Packages installed (package.json)
-&amp;#34;dependencies&amp;#34;: { &amp;#34;express&amp;#34;: &amp;#34;^4.17.1&amp;#34;, &amp;#34;flat&amp;#34;: &amp;#34;5.0.0&amp;#34;, &amp;#34;pug&amp;#34;: &amp;#34;^3.0.0&amp;#34; }  - We have `pug:3.0.0` which is vulnerable to RCE.- Source: https://github.com/pugjs/pug/issues/3312  Location of vulnerability (routes/index.</description>
+Quick Recon  Packages installed (package.json)  &amp;#34;dependencies&amp;#34;: { &amp;#34;express&amp;#34;: &amp;#34;^4.17.1&amp;#34;, &amp;#34;flat&amp;#34;: &amp;#34;5.0.0&amp;#34;, &amp;#34;pug&amp;#34;: &amp;#34;^3.0.0&amp;#34; }  We have pug:3.0.0 which is vulnerable to RCE. Source: https://github.com/pugjs/pug/issues/3312    Location of vulnerability (routes/index.js)  const pug = require(&amp;#39;pug&amp;#39;); .</description>
     </item>
     
     <item>

