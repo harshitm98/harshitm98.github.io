@@ -1,7 +1,7 @@
 ---
 title: HTB Horizontall - Writeup
 date: "2022-01-04"
-draft: false
+draft: true
 tags: ["hackthebox", "machines", "cve", "", "writeup"]
 ---
 
