@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>smali on Harshit Maheshwari</title>
+    <link>https://harshitm98.github.io/tags/smali/</link>
+    <description>Recent content in smali on Harshit Maheshwari</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
+    <lastBuildDate>Wed, 04 Dec 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://harshitm98.github.io/tags/smali/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Android CTF - CyberTruck Challenge 2019 </title>
+      <link>https://harshitm98.github.io/posts/android-cybertruck19/</link>
+      <pubDate>Wed, 04 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://harshitm98.github.io/posts/android-cybertruck19/</guid>
+      <description>CyberTruck Challenge 2019 is a premier event to bring together a community of interest related to heavy vehicle cybersecurity issued and develop talent to address those challenges. This is a write up for their CTF. Their website can be found here and the Github profile for the challenge can found here.
+Note: This was originally written on Medium and has been converted to markdown using mediumexporter
+Note: I was not present during the event.</description>
+    </item>
+    
+    <item>
+      <title>Android CTF - KGB Messenger</title>
+      <link>https://harshitm98.github.io/posts/android-kgb-messenger/</link>
+      <pubDate>Wed, 04 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://harshitm98.github.io/posts/android-kgb-messenger/</guid>
+      <description>This is a write up of an open source CTF practice challenge. The aim of this CTF is to learn how to reverse engineer an Android Application. You can find the CTF link here.
+Note: This was originally written on Medium and has been converted to markdown using mediumexporter
+Tools used   Apktool
+  jd-gui
+  Uber Apk Signer
+  dex2jar
+  Installing the application Make sure to connect the android phone with debugging mode enabled and then install the application.</description>
+    </item>
+    
+  </channel>
+</rss>

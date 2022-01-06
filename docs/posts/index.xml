@@ -561,5 +561,311 @@ User katie may run the following commands on spectra:
 ]]></content>
         </item>
         
+        <item>
+            <title>Android CTF - CyberTruck Challenge 2019 </title>
+            <link>https://harshitm98.github.io/posts/android-cybertruck19/</link>
+            <pubDate>Wed, 04 Dec 2019 00:00:00 +0000</pubDate>
+            
+            <guid>https://harshitm98.github.io/posts/android-cybertruck19/</guid>
+            <description>CyberTruck Challenge 2019 is a premier event to bring together a community of interest related to heavy vehicle cybersecurity issued and develop talent to address those challenges. This is a write up for their CTF. Their website can be found here and the Github profile for the challenge can found here.
+Note: This was originally written on Medium and has been converted to markdown using mediumexporter
+Note: I was not present during the event.</description>
+            <content type="html"><![CDATA[<p>CyberTruck Challenge 2019 is a premier event to bring together a community of interest related to heavy vehicle cybersecurity issued and develop talent to address those challenges. This is a write up for their CTF. Their website can be found here and the Github profile for the challenge can found here.</p>
+<p><em>Note: This was originally written on <a href="https://medium.com/bugbountywriteup/cybertruck-challenge-2019-android-ctf-e39c7f796530">Medium</a> and has been converted to markdown using <a href="https://github.com/xdamman/mediumexporter">mediumexporter</a></em></p>
+<p><em>Note: I was not present during the event. All I wanted to do was practice Android CTFs and that’s when I came across their <a href="https://github.com/nowsecure/cybertruckchallenge19">Github page</a>.</em></p>
+<h3 id="tools-used">Tools used</h3>
+<ul>
+<li>
+<p><a href="https://ibotpeaches.github.io/Apktool/">ApkTool</a></p>
+</li>
+<li>
+<p><a href="https://github.com/pxb1988/dex2jar/">dex2jar</a></p>
+</li>
+<li>
+<p><a href="https://github.com/java-decompiler/jd-gui/releases/">jd-gui</a></p>
+</li>
+<li>
+<p><a href="https://frida.re/docs/android/">frida</a></p>
+</li>
+<li>
+<p><a href="https://www.radare.org/n/radare2.html">radare2</a></p>
+</li>
+</ul>
+<h2 id="challenge-description">Challenge description</h2>
+<p>A new mobile remote keyless system “CyberTruck” has been implemented by one of the most well-known car security companies “NowSecure Mobile Vehicles”. The car security company has ensured that the system is entirely uncrackable and therefore attackers will not be able to recover secrets within the mobile application.</p>
+<p>If you are an experienced Android reverser, then enable the tamperproof button to harden the application before unlocking your cars. Your goal will consist on recovering up to 6 secrets in the application.</p>
+<h2 id="preparing-for-the-ctf">Preparing for the CTF</h2>
+<h3 id="installing-the-app">Installing the app</h3>
+<p>Using adb to install the app on the phone.</p>
+<p>adb install cybertruck19.apk</p>
+<h3 id="decoding-the-app-using-apktool">Decoding the app using ApkTool</h3>
+<p>Decode the APK using Apktool and output it into cybertruck-smali folder.</p>
+<p>apktool d cybertruck19.apk -o cybertruck-smali</p>
+<h3 id="converting-the-apk-in-jar-format-using-dex2jar">Converting the apk in .jar format using dex2jar</h3>
+<p>I converted the .apk to jar because then I can use <strong>JD-GUI</strong> to see Java source code.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*2_E6zZYGLoHbzXVHoknouQ.png" alt="Note: I downloaded dex2jar and create a tools directory so all my tools are easily accessible"><strong>Note: I downloaded dex2jar and create a tools directory so all my tools are easily accessible</strong></p>
+<p>Using <strong>JD-GUI</strong>, we open the cybertruck.jar created by the dex2jar (previous command).</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*ZO9UeWlGMJ6iUF_jLKIDmg.png" alt="Note: I downloaded jd-gui and create a tools directory so all my tools are easily accessible"><strong>Note: I downloaded jd-gui and create a tools directory so all my tools are easily accessible</strong></p>
+<h3 id="launching-the-app">Launching the app</h3>
+<p>As soon as we launch the app, we get this image.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*HC27j26RSGCGyorq1rpzzg.png" alt=""></p>
+<p>So we try to understand what the unlock button and toggle buttons do.</p>
+<h2 id="challenge-1">Challenge #1</h2>
+<p><em>Challenge1 to unlock car1. “DES key: Completely Keyless. Completely safe”</em></p>
+<p>To figure out what activity is being launched, let’s take a look at AndroidManifest.xml</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*lgNrddThBMQIefRoQZ-QjQ.png" alt="AndroidManifest.xml file is under cybertruck-smali directory (created by apktool)"><em>AndroidManifest.xml file is under cybertruck-smali directory (created by apktool)</em></p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*XB65TsjaoFMw4ozIGs9VUA.png" alt="MainActivity is the activity that is being launched first"><em>MainActivity is the activity that is being launched first</em></p>
+<p>So, using JD-GUI to take a look at the source code of MainActivity.class</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*w0aOQOh_VRsAfUUg29_Bzw.png" alt="Note: I downloaded jd-gui jar file inside tools directory and launch using java"><em>Note: I downloaded jd-gui jar file inside tools directory and launch using java</em></p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*06ES7P75_kbMrd5tWZhF3w.png" alt=""></p>
+<p>Looking at the onCreate function, we find the Unlock button. On clicking the unlock button, it calls this.b.k() . So we further investigate.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*9gPSJx9oCmbFKXs7oRueyQ.png" alt="Snapshot of function k"><em>Snapshot of function k</em></p>
+<p>The function creates an instance of class Challenge1. So we take a look at Challenge1.class</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*O6G7O4nAz12bdpAiUXVgcg.png" alt=""></p>
+<p>Static Flag for challenge1 is s3cr3t$_n3veR_mUst_bE_h4rdc0d3d_m4t3!</p>
+<p>For dynamic flag, we will have to find a way to get the value returned by generateDynamicKey function in the runtime. These are exactly the scenario where Frida comes in handy. You can learn more about Frida from their <a href="https://frida.re/docs/home/">official documentation</a>.</p>
+<!-- raw HTML omitted -->
+<p>generateDynamicKey returns a byte array. The byte array is stored in variable result which we forward it python function on_message. Here we convert byte array to string.</p>
+<h3 id="capturing-dynamic-flag">Capturing Dynamic flag</h3>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*7PVEQ4QoPLJvUlwXyzNKjg.png" alt="First we run frida-server on the android device. Then we use the flag-capture.py, to capture the dynamic flag"><em>First we run frida-server on the android device. Then we use the flag-capture.py, to capture the dynamic flag</em></p>
+<p>The dynamic flag is 046e04ff67535d25dfea022033fcaaf23606b95a5c07a8c6</p>
+<h2 id="challenge-2">Challenge #2</h2>
+<p><em>Challenge2 to unlock car2: “AES key: Your Cell Mobile Is Your Key”</em></p>
+<p>Going through the this.b.k() function in MainActivity.class</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*Dzo-ZgUqs-V9ezyxpWR2xg.png" alt=""></p>
+<p>Instance of class a is called. Let’s investigate further.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*hTcEQlKpyt1ClEkFJ2tChg.png" alt=""></p>
+<p>So we have class a with constructor a and two functions with name a.</p>
+<p>While declaring constructors, you do not have specify the return value. So public a(Context paramContext) is the constructor and the rest are functions.</p>
+<p>So this file contains:</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*QY11GmOV97eaXFte38qnWw.png" alt="Constructor"><em>Constructor</em></p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*cqV8aDib4K0fg7q_SK8pwg.png" alt="Function that takes one argument and returns byte array"><em>Function that takes one argument and returns byte array</em></p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*T0UMh2i--l9yuOezRyZzRQ.png" alt="Function that takes two arguments and return byte array"><em>Function that takes two arguments and return byte array</em></p>
+<p>Anyways, coming back to constructor a, it calls a(Context paramContext) and then its returned value is then passed as one of the arguments in a(byte[] paramArrayOfbyte1, byte[] paramArrayOfbyte2)</p>
+<p>So we take a look at function a(Context paramContext)</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*Q6rw5ylIwa-bqlig4YqT5Q.png" alt=""></p>
+<p>File ch2.key is opened. So we take a look at its contents.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*nB1XWbSakEY5RrjKS_b0-w.png" alt=""></p>
+<p>The value of static flag for Challenge2 is d474_47_r357_mu57_pR073C73D700!!</p>
+<p>Now let’s take look at function a(byte[] paramArrayOfbyte1, byte[] paramArrayOfbyte2)</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*ls3a6PTjEcRVWpUf8Mc39Q.png" alt=""></p>
+<p>For dynamic flag, we will need to use Frida again to capture the returned value of this function</p>
+<!-- raw HTML omitted -->
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*H5E7QZBuctqOm4x4ijhJRg.png" alt="After appending the above snippet to js_code, we rerun the flag-capture.py"><em>After appending the above snippet to js_code, we rerun the flag-capture.py</em></p>
+<p>The dynamic flag for Challenge2 is 512100f7cc50c76906d23181aff63f0d642b3d947f75d360b6b15447540e4f16</p>
+<h2 id="challenge-3">Challenge #3</h2>
+<p><em>Challenge3 to unlock car3. “Mr Truck: Unlock me Baby!”</em></p>
+<p><strong>Challenge3 description:</strong> There is an interesting string in the native code. Can you catch it?</p>
+<p>Inside MainActivity.class, this native-lib.so is loaded.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*XSxqkWea5tnGJ05hugxxHw.png" alt=""></p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*dIC-ILhAHsH0F9uAe32Jag.png" alt="We first locate this file and then use strings to print all the strings in the file"><em>We first locate this file and then use <strong>strings</strong> to print all the strings in the file</em></p>
+<p>The static flag for this challenge is Native_c0d3_1s_h4rd3r_To_r3vers3</p>
+<p>For dynamic flag, it depends upon on your device’s instruction set. In my case, it was arm64-v8a which requires you to be able to understand assembly language instructions for the same. Which seems to be out of my league (..yet!).</p>
+<h3 id="how-to-bypass-tamperproof-check">How to bypass Tamperproof check?</h3>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*cj-7s8Woz1RAnjnykNbzAw.png" alt="This function checks if there is a frida server in this device"><em>This function checks if there is a frida server in this device</em></p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*JXfcr5TDB_GnjecEs8_Veg.png" alt=""></p>
+<p>This function returns true if there is frida server is present and false otherwise. So we use Frida to overwrite this function’s return value</p>
+<!-- raw HTML omitted -->
+<p>So that’s my solution for this CTF. I am still new to CTFs and have a lot to learn yet. Still this CTF was a good learning opportunity. Hope you also learned something.</p>
+<p>Thanks for reading my write-up! Cheers! 🍺</p>
+<p>Follow me on <a href="https://twitter.com/fake_batman_">Twitter</a>, <a href="https://github.com/harshitm98">Github</a> or connect on <a href="https://linkedin.com/in/harshitm98">LinkedIn</a>.</p>
+]]></content>
+        </item>
+        
+        <item>
+            <title>Android CTF - KGB Messenger</title>
+            <link>https://harshitm98.github.io/posts/android-kgb-messenger/</link>
+            <pubDate>Wed, 04 Dec 2019 00:00:00 +0000</pubDate>
+            
+            <guid>https://harshitm98.github.io/posts/android-kgb-messenger/</guid>
+            <description>This is a write up of an open source CTF practice challenge. The aim of this CTF is to learn how to reverse engineer an Android Application. You can find the CTF link here.
+Note: This was originally written on Medium and has been converted to markdown using mediumexporter
+Tools used   Apktool
+  jd-gui
+  Uber Apk Signer
+  dex2jar
+  Installing the application Make sure to connect the android phone with debugging mode enabled and then install the application.</description>
+            <content type="html"><![CDATA[<p>This is a write up of an open source CTF practice challenge. The aim of this CTF is to learn how to reverse engineer an Android Application. You can find the CTF link <a href="https://github.com/tlamb96/kgb_messenger">here</a>.</p>
+<p><em>Note: This was originally written on <a href="https://medium.com/@fake_batman_/android-ctf-kgb-messenger-d9069f4cedf8">Medium</a> and has been converted to markdown using <a href="https://github.com/xdamman/mediumexporter">mediumexporter</a></em></p>
+<h3 id="tools-used">Tools used</h3>
+<ul>
+<li>
+<p><a href="https://ibotpeaches.github.io/Apktool/">Apktool</a></p>
+</li>
+<li>
+<p><a href="https://github.com/java-decompiler/jd-gui/releases/">jd-gui</a></p>
+</li>
+<li>
+<p><a href="https://github.com/patrickfav/uber-apk-signer">Uber Apk Signer</a></p>
+</li>
+<li>
+<p><a href="https://github.com/pxb1988/dex2jar/">dex2jar</a></p>
+</li>
+</ul>
+<h3 id="installing-the-application"><strong>Installing the application</strong></h3>
+<p>Make sure to connect the android phone with debugging mode enabled and then install the application.</p>
+<p>adb install kgb-messenger.apk</p>
+<h3 id="decoding-using-apktool">Decoding using Apktool</h3>
+<p>Decode the APK using Apktool and output it into kgb-smali folder.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*Bi7Q_rVomlGzdFko5DJlIw.png" alt=""></p>
+<h3 id="converting-the-apk-in-jar-format-using-dex2jar">Converting the apk in .jar format using dex2jar</h3>
+<p>We convert to jar because then we can use <strong>JD-GUI</strong> to see Java code.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/0*c5DGqjKODExd_TJl" alt=""></p>
+<p>Using <strong>JD-GUI</strong>, we open the kgb-jar.jar created by the dex2jar (previous command).</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*-PNbYjV-6jDsq1ISkKAvnA.png" alt="Note: I downloaded JD-GUI and created a directory called tools and move it to that directory">
+<em><strong>Note</strong>: I downloaded JD-GUI and created a directory called tools and move it to that directory</em></p>
+<h3 id="launching-the-app-now"><strong>Launching the app now</strong></h3>
+<p>As soon as we launch the app we get this error.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*yXOwagk_u6Fq_PwrsdRXSw.jpeg" alt=""></p>
+<p>To see what is causing this error, we need to see which Activity is being launched first. So we open AndroidManifest.xml which can be found inside kgb-smali (Files created by apktool)</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*abkleTtjpX__IeiSd2HShQ.png" alt=""></p>
+<p>Using vim editor, we open AndroidManifest.xml</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*oVI2pqnG3OaqOWbwKL1JRA.png" alt="Snippet of part of AndroidManifest.xml">
+<em>Snippet of part of AndroidManifest.xml</em></p>
+<p>MainActivity is the activity that is launched first. So use JD-GUI to view MainActivity.class</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*nl_NWIixkGk4_K5bKXifGQ.png" alt=""></p>
+<p>We can see, when the activity is created, two string values are checked. First str1 is checked if it equals to <em>Russia. <em>Similarly, str2</em></em> <strong>is checked if it equals to getResources().getString(<em>2131558400</em>).</strong> **The number is numerical representation for the value of string stored in <a href="https://developer.android.com/guide/topics/resources/string-resource">strings.xml</a> file.</p>
+<p>Since we also have the .smali** **files inside smali folder created by Apktool, we open MainActivity.smali and locate this particular line getResources().getString(2131558400)</p>
+<p>Before that we need to represent 2131558400 in hex format so that it becomes easier for us to find the value inside of smali code.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*u1KvXOorF9aFAI55s7l9hg.png" alt=""></p>
+<p>So we open MainActivity.smali file using Vim editor.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/0*PbT0zbT5PyaccPDk" alt=""></p>
+<p>Now, we try to locate the String resource which has the id 0x7f0d0000 and is being compared to str2.</p>
+<p>We go to the **res/values <strong>directory and search where does 0x7f0d0000</strong> **occurs</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*pS-1flAXQrOjTtRRqtHoHA.png" alt=""></p>
+<p>We see that the name is <strong>“User”</strong> and type is <strong>“string”</strong>. So we search for **“User” **and in strings.xml file the name=”User” has value encoded using Base64. We docode it.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*_5l9saOR-njueyJgldPSZQ.png" alt=""></p>
+<h2 id="capturing-the-second-flag">Capturing the Second Flag</h2>
+<p><em>To capture the second flag we need to go to the next activity, that is LoginActivity.</em></p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*hI8Kajk8qBuNzrs2IQxABA.png" alt="onCreate method of MainActivity">
+<em>onCreate method of MainActivity</em></p>
+<p>In order to get to LoginActivity, we need to find a way to get through both if conditions or we could just remove them.</p>
+<p>Let’s open the .smali version of MainActivity.class to remove the code responsible for both if conditions.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/0*eqJBxvnnE2HQL2tz" alt="Smali version of first condition">
+<em>Smali version of first condition</em></p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/0*LoOSIYFg4CN0OeVw" alt="Smali version of second condition">
+<em>Smali version of second condition</em></p>
+<h3 id="getting-rid-of-both-conditions">Getting rid of both conditions</h3>
+<p><img src="https://cdn-images-1.medium.com/max/2000/0*maA0rMCkgZiglXk_" alt="Selecting the code for removal">
+<em>Selecting the code for removal</em></p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/0*FEm9b0f8VqTC-5AU" alt="After removal">
+<em>After removal</em></p>
+<p><em>Note: Make sure after removing your code looks this and ends with goto :go_to_0</em></p>
+<h3 id="building-the-apk">Building the apk</h3>
+<p>After making the changes we need to build the apk. So we build the apk using Apktool.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*kZVaENKs7Wq_CZaSxLXuog.png" alt=""></p>
+<h3 id="signing-the-apk">Signing the apk</h3>
+<p>We cannot directly install the apk. We need to <a href="http://www.androiddocs.com/tools/publishing/app-signing.html">sign</a> them first. However, since we are not the original developers of this app, we will Uber Apk Signer for this purpose.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/0*S4gIFG1JJDynyUND" alt="Note: I downloaded Uber Apk Signer and created a directory called tools and move it to that directory">
+<em><strong>Note:</strong> I downloaded Uber Apk Signer and created a directory called tools and move it to that directory</em></p>
+<h3 id="installing-and-running-the-modified-apk">Installing and running the modified apk</h3>
+<p>Now when we launch, we are directly taken to LoginActivity.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*iXBg8Htuw8wb2s7UUA3nWA.jpeg" alt=""></p>
+<p>Now we have to find out what the username and password is. Let’s take a look at the source code again but this time for LoginActivity using JD-GUI</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*EhH3Q8kmfI9m3vGOml_Pxg.png" alt=""></p>
+<p>Inside onLogin method, we have two edit text who are converted to string. EditText1 is converted to string n and EditText2 is converted to string o. Right now we do not know which EditText corresponds to username and password.</p>
+<h3 id="finding-username">Finding username</h3>
+<p>We look at the first nested if condition, string n is being compared to a resource with id 2131158450. So we convert it to hex code again and check if we can find the corresponding string name.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*CuTQtfLwnPq9Ig-DFRx8Dg.png" alt="Finding the username value by using id which is found using hex code of 2131158450">
+<em>Finding the <strong>username</strong> value by using id which is found using hex code of 2131158450</em></p>
+<p>So the username is <strong>codenameduchess</strong>.</p>
+<h3 id="finding-password">Finding password</h3>
+<p>Let’s try to find the password using the same method used for username.</p>
+<p>We go through the code again, and can see that function j should return false.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*1VnPhBbncBCYlqwqgiAONA.png" alt=""></p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*etHk9x6vEt-GcyS6fpqo7w.png" alt=""></p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*C9aaQCw1cJOEJ9hNA-vQLw.png" alt=""></p>
+<p>Here, the string o is hashed using MD5 and then compared with string resource id 2131558446.</p>
+<p>We try to find the value of hash from strings.xml and would use findmyhashto find its original value.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*iE1i-MlasrMZ50Z2TcBGtA.png" alt=""></p>
+<p>We get hash value in the strings.xml, but when we try to use findmyhash to find the hash’s original value, we do not get any results.
+The question did say that we would have to use social engineering to get the password. So we try googling <strong>codenameduchess</strong>.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/0*pQfTGuSgeW_bAWoS" alt="Google result for codenameduchess">
+<em>Google result for codenameduchess</em></p>
+<p>The name of account <strong>‘Sterling Archer’</strong> also checks out with the first flag. So we take a look at it’s twitter account.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2462/0*5efkfUlhLBwWccQC" alt="Twitter page for codenameduchess (Sterling Archer)">
+<em>Twitter page for codenameduchess (Sterling Archer)</em></p>
+<p>It looks like it is a character of a TV show. We now try to Google for codename duchess password.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/0*kCTg8tkgzelbTbQr" alt="Google result for codename duchess password">
+<em>Google result for codename duchess password</em></p>
+<p>We open the PDF, and search through it for password.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/0*RUhLhqm0GDv_H5va" alt=""></p>
+<p>According to this, the password is <strong>Guest</strong>. So we input the password as ‘<strong>guest</strong>’ (all lowercase).</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*exESxY33phclNRn3z6I-mw.jpeg" alt=""></p>
+<p>And..we are in. The Flag is <strong>G00G13_PR0</strong>.</p>
+<h3 id="checking-the-value-of-hash">Checking the value of hash</h3>
+<p>Just for fun, let’s see why could we not find the hash. So when we calculate the MD5 hash of guest, we get</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/0*XLjWrxUB6xRbFgBp" alt=""></p>
+<p>So the reason we were not able to find the result was the hash we had was incomplete (did not have the zero at the start).</p>
+<h2 id="capturing-the-third-flag">Capturing the third flag</h2>
+<p><em>After logging in, we are taken to MessageActivity. There’s where we will find our third flag.</em></p>
+<p>So we open MessageActivity using JD-GUI, we take a look at the source code.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/0*LMB1vOs34Zg_KVtC" alt="Function onSendMessage from MessageActivity">
+<em>Function onSendMessage from MessageActivity</em></p>
+<p>Whenever we send the message, onSendMessage function is called, and the text entered using EditText is converted to String str.</p>
+<p>Now if we look closely, the string <strong>str</strong> is passed to a function named **a **on which equals function is called to check if it is equal to <strong>p</strong>.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/0*gzeSfauvA_nblVaC" alt=""></p>
+<p>The value of <strong>p</strong> is:</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*ftWhJr5rN_ZSA-rNzTEx6Q.png" alt=""></p>
+<p>Now, let’s take a look at function a</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/0*serjcz7YzZkD70kI" alt=""></p>
+<p>Function a** **returns string. In this function, the value of string passed as an argument obtained by:</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*WNgLkw-NgbZvZJ3sfACG8g.png" alt="Visual representation of the function a">
+<em>Visual representation of the function a</em></p>
+<p>So, the value of <strong>p</strong> equals to the parameter string passed to this function <strong>a</strong>. So, we can reverse engineer the original value of <strong>p</strong> by doing these steps in reverse. As we know (A XOR B) XOR B = A, we can use this to find the original value of the string:</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*vC6PV5N1cytGKcOEcW_lvw.png" alt="Visual representation of function where we XOR again">
+<em>Visual representation of function where we XOR again</em></p>
+<p>We recreate this above algorithm using Python:</p>
+<pre><code>p = &quot;V@]EAASB\022WZF\022e,a$7(&amp;am2(3.\003&quot;
+p = list(str(p))
+
+for i in range(len(p) // 2):
+	p[i] = chr(ord(p[i]) ^ 0x32)
+	p[len(p) // 2 + 1 + i] = chr(ord(p[len(p) // 2 + 1 + i]) ^ 0x41)
+
+p.reverse()
+print(&quot;&quot;.join(p))
+</code></pre><p>When we run this file, we get</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/0*e4tzOJ7YacoD7-fm" alt=""></p>
+<p>So we enter this string as the input for the EditText of the app:</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*OdUTNQfQSU42HpxQlN-QsA.png" alt=""></p>
+<p>Similarly, the input from the EditText is passed through function b and check if it equals to string r.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*Gr-cQn_dQSM88B4JbftQWQ.png" alt="The value of String r">
+<em>The value of String r</em></p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/0*kDT9QhVm015Q5pY6" alt="Function b whose returned value is compared to String r">
+<em>Function b whose returned value is compared to String r</em></p>
+<p>While converting the smali code to java class, there seems to be some problem. The code can be refactored so it can be better understood.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/0*LSNKMof9nI_hhx0W" alt="Just a readable version of function b">
+<em>Just a readable version of function b</em></p>
+<p>Here it is not possible to reverse engineer, so we try to brute force our way in. We check for what values of loop iterable i and alphabet, we get the output r.</p>
+<pre><code>import string
+
+r = &quot;\000dslp}oQ\000 dks$|M\000h +AYQg\000P*!M$gQ\000&quot;
+r = list(str(r))
+r.reverse()
+
+for i in range(len(r)):
+	if i % 8 == 0:
+		print(&quot;_&quot;, end=&quot;&quot;)
+		continue 
+</code></pre><p>After running this file, we get the output.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/0*2l3YUXwHRTiocYUK" alt=""></p>
+<p>The values for every 8th position is ‘_’ because we have i%8 == 0. And irrespective of the alphabets, the output from the function is 0, so it is difficult to find the answer using brute force.</p>
+<p>So the message could be <strong>May I <em>PLEASE</em> have the password</strong>.</p>
+<p>Let’s put this message</p>
+<p><img src="https://cdn-images-1.medium.com/max/2160/1*Q3uWdINI9QQ9NF4EpMtaig.jpeg" alt=""></p>
+<p>Third flag captured.</p>
+<h3 id="why-did-not-directly-type-this-message-and-type-the-message-before">Why did not directly type this message and type the message before?</h3>
+<p>To understand this, we need to see how the flag is calculated. Function i is responsible for calculating the flag. Let’s see how</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*6gHnhid59KUUj7mDg54lkw.png" alt=""></p>
+<p>The first condition checks if String q and s are not null. That is they have to be initialized and set to some specific value. We cannot delete this if condition like before because we need values of q and s to calculate the flag.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*o-0u1INYr1chxf7yUPA-NQ.jpeg" alt="In function onSendMessage"><em>In function onSendMessage</em></p>
+<p>It’s only after successfully sending both questions, the values for q and s are set. So it is necessary to send both messages.</p>
+<p>So that’s my solution for this CTF. This was my first ever CTF and learned a lot during this challenge. Hope you also learned something.</p>
+<p>Thanks for reading my write-up! Cheers! 🍺</p>
+<p>Follow me on <a href="https://twitter.com/fake_batman_">Twitter</a>, <a href="https://github.com/harshitm98">Github</a> or connect on <a href="https://linkedin.com/in/harshitm98">LinkedIn</a>.</p>
+]]></content>
+        </item>
+        
     </channel>
 </rss>
