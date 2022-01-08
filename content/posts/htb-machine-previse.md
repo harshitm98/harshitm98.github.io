@@ -1,11 +1,14 @@
 ---
 title: HTB Previse - Writeup
-date: "2021-12-25"
+date: "2022-01-08"
 draft: false
 tags: ["hackthebox", "machines", "web", "writeup"]
 ---
 
 # Enumeration
+
+Let's kick off with some initial enumeration. We will run nmap scans to see what ports are open and what services are running on the open ports.
+
 ## Initial Enumeration
 #### Nmap Scans
 
@@ -37,6 +40,8 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 ```
 
 ## Enumeration: Port 80
+
+Now we know that port 80 is open, let's fuzz to find if there any hidden directories or files.
 
 #### Ffuf
 
