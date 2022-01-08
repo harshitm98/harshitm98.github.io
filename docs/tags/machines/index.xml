@@ -7,7 +7,18 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
-    <lastBuildDate>Fri, 23 Jul 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://harshitm98.github.io/tags/machines/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 25 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://harshitm98.github.io/tags/machines/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>HTB Previse - Writeup</title>
+      <link>https://harshitm98.github.io/posts/htb-machine-previse/</link>
+      <pubDate>Sat, 25 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://harshitm98.github.io/posts/htb-machine-previse/</guid>
+      <description>Enumeration Initial Enumeration Nmap Scans Initial:
+PORT STATE SERVICE REASON 22/tcp open ssh syn-ack 80/tcp open http syn-ack Service Scan:
+22/tcp open ssh OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0) | ssh-hostkey: | 2048 53:ed:44:40:11:6e:8b:da:69:85:79:c0:81:f2:3a:12 (RSA) | 256 bc:54:20:ac:17:23:bb:50:20:f4:e1:6e:62:0f:01:b5 (ECDSA) |_ 256 33:c1:89:ea:59:73:b1:78:84:38:a4:21:10:0c:91:d8 (ED25519) 80/tcp open http Apache httpd 2.4.29 ((Ubuntu)) | http-cookie-flags: | /: | PHPSESSID: |_ httponly flag not set |_http-server-header: Apache/2.4.29 (Ubuntu) | http-title: Previse Login |_Requested resource was login.</description>
+    </item>
+    
     <item>
       <title>HTB Cap - Writeup</title>
       <link>https://harshitm98.github.io/posts/htb-machine-cap/</link>

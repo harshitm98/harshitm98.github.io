@@ -1,7 +1,7 @@
 ---
 title: HTB Previse - Writeup
 date: "2021-12-25"
-draft: true
+draft: false
 tags: ["hackthebox", "machines", "web", "writeup"]
 ---
 

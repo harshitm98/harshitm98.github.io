@@ -231,7 +231,7 @@ So, the value of **p** equals to the parameter string passed to this function **
 
 We recreate this above algorithm using Python:
 
-```
+```python
 p = "V@]EAASB\022WZF\022e,a$7(&am2(3.\003"
 p = list(str(p))
 
@@ -266,7 +266,7 @@ While converting the smali code to java class, there seems to be some problem. T
 
 Here it is not possible to reverse engineer, so we try to brute force our way in. We check for what values of loop iterable i and alphabet, we get the output r.
 
-```
+```python
 import string
 
 r = "\000dslp}oQ\000 dks$|M\000h +AYQg\000P*!M$gQ\000"

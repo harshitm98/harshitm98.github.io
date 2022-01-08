@@ -105,7 +105,7 @@ The dynamic flag is 046e04ff67535d25dfea022033fcaaf23606b95a5c07a8c6
 
 *Challenge2 to unlock car2: “AES key: Your Cell Mobile Is Your Key”*
 
-Going through the this.b.k() function in MainActivity.class
+Going through the `this.b.k()` function in `MainActivity.class`
 
 ![](https://cdn-images-1.medium.com/max/2000/1*Dzo-ZgUqs-V9ezyxpWR2xg.png)
 
