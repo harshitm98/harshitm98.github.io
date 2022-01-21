@@ -5,9 +5,10 @@
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="author" content="">
-<meta name="description" content="Enumeration Initial Enumeration Nmap Scans Initial:
+<meta name="description" content="Enumeration Let&amp;rsquo;s kick off with some initial enumeration. We will run nmap scans to see what ports are open and what services are running on the open ports.
+Initial Enumeration Nmap Scans Initial:
 PORT STATE SERVICE REASON 22/tcp open ssh syn-ack 80/tcp open http syn-ack Service Scan:
-22/tcp open ssh OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0) | ssh-hostkey: | 2048 53:ed:44:40:11:6e:8b:da:69:85:79:c0:81:f2:3a:12 (RSA) | 256 bc:54:20:ac:17:23:bb:50:20:f4:e1:6e:62:0f:01:b5 (ECDSA) |_ 256 33:c1:89:ea:59:73:b1:78:84:38:a4:21:10:0c:91:d8 (ED25519) 80/tcp open http Apache httpd 2.4.29 ((Ubuntu)) | http-cookie-flags: | /: | PHPSESSID: |_ httponly flag not set |_http-server-header: Apache/2.4.29 (Ubuntu) | http-title: Previse Login |_Requested resource was login." />
+22/tcp open ssh OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0) | ssh-hostkey: | 2048 53:ed:44:40:11:6e:8b:da:69:85:79:c0:81:f2:3a:12 (RSA) | 256 bc:54:20:ac:17:23:bb:50:20:f4:e1:6e:62:0f:01:b5 (ECDSA) |_ 256 33:c1:89:ea:59:73:b1:78:84:38:a4:21:10:0c:91:d8 (ED25519) 80/tcp open http Apache httpd 2." />
 <meta name="keywords" content=", hackthebox, machines, web, writeup" />
 <meta name="robots" content="noodp" />
 <meta name="theme-color" content="" />
@@ -43,31 +44,34 @@ PORT STATE SERVICE REASON 22/tcp open ssh syn-ack 80/tcp open http syn-ack Servi
 
 
 <meta itemprop="name" content="HTB Previse - Writeup">
-<meta itemprop="description" content="Enumeration Initial Enumeration Nmap Scans Initial:
+<meta itemprop="description" content="Enumeration Let&rsquo;s kick off with some initial enumeration. We will run nmap scans to see what ports are open and what services are running on the open ports.
+Initial Enumeration Nmap Scans Initial:
 PORT STATE SERVICE REASON 22/tcp open ssh syn-ack 80/tcp open http syn-ack Service Scan:
-22/tcp open ssh OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0) | ssh-hostkey: | 2048 53:ed:44:40:11:6e:8b:da:69:85:79:c0:81:f2:3a:12 (RSA) | 256 bc:54:20:ac:17:23:bb:50:20:f4:e1:6e:62:0f:01:b5 (ECDSA) |_ 256 33:c1:89:ea:59:73:b1:78:84:38:a4:21:10:0c:91:d8 (ED25519) 80/tcp open http Apache httpd 2.4.29 ((Ubuntu)) | http-cookie-flags: | /: | PHPSESSID: |_ httponly flag not set |_http-server-header: Apache/2.4.29 (Ubuntu) | http-title: Previse Login |_Requested resource was login."><meta itemprop="datePublished" content="2021-12-25T00:00:00&#43;00:00" />
-<meta itemprop="dateModified" content="2021-12-25T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="762"><meta itemprop="image" content="https://harshitm98.github.io/"/>
+22/tcp open ssh OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0) | ssh-hostkey: | 2048 53:ed:44:40:11:6e:8b:da:69:85:79:c0:81:f2:3a:12 (RSA) | 256 bc:54:20:ac:17:23:bb:50:20:f4:e1:6e:62:0f:01:b5 (ECDSA) |_ 256 33:c1:89:ea:59:73:b1:78:84:38:a4:21:10:0c:91:d8 (ED25519) 80/tcp open http Apache httpd 2."><meta itemprop="datePublished" content="2022-01-08T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2022-01-08T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="808"><meta itemprop="image" content="https://harshitm98.github.io/"/>
 <meta itemprop="keywords" content="hackthebox,machines,web,writeup," />
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://harshitm98.github.io/"/>
 
 <meta name="twitter:title" content="HTB Previse - Writeup"/>
-<meta name="twitter:description" content="Enumeration Initial Enumeration Nmap Scans Initial:
+<meta name="twitter:description" content="Enumeration Let&rsquo;s kick off with some initial enumeration. We will run nmap scans to see what ports are open and what services are running on the open ports.
+Initial Enumeration Nmap Scans Initial:
 PORT STATE SERVICE REASON 22/tcp open ssh syn-ack 80/tcp open http syn-ack Service Scan:
-22/tcp open ssh OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0) | ssh-hostkey: | 2048 53:ed:44:40:11:6e:8b:da:69:85:79:c0:81:f2:3a:12 (RSA) | 256 bc:54:20:ac:17:23:bb:50:20:f4:e1:6e:62:0f:01:b5 (ECDSA) |_ 256 33:c1:89:ea:59:73:b1:78:84:38:a4:21:10:0c:91:d8 (ED25519) 80/tcp open http Apache httpd 2.4.29 ((Ubuntu)) | http-cookie-flags: | /: | PHPSESSID: |_ httponly flag not set |_http-server-header: Apache/2.4.29 (Ubuntu) | http-title: Previse Login |_Requested resource was login."/>
+22/tcp open ssh OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0) | ssh-hostkey: | 2048 53:ed:44:40:11:6e:8b:da:69:85:79:c0:81:f2:3a:12 (RSA) | 256 bc:54:20:ac:17:23:bb:50:20:f4:e1:6e:62:0f:01:b5 (ECDSA) |_ 256 33:c1:89:ea:59:73:b1:78:84:38:a4:21:10:0c:91:d8 (ED25519) 80/tcp open http Apache httpd 2."/>
 
 
 
 
     <meta property="og:title" content="HTB Previse - Writeup" />
-<meta property="og:description" content="Enumeration Initial Enumeration Nmap Scans Initial:
+<meta property="og:description" content="Enumeration Let&rsquo;s kick off with some initial enumeration. We will run nmap scans to see what ports are open and what services are running on the open ports.
+Initial Enumeration Nmap Scans Initial:
 PORT STATE SERVICE REASON 22/tcp open ssh syn-ack 80/tcp open http syn-ack Service Scan:
-22/tcp open ssh OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0) | ssh-hostkey: | 2048 53:ed:44:40:11:6e:8b:da:69:85:79:c0:81:f2:3a:12 (RSA) | 256 bc:54:20:ac:17:23:bb:50:20:f4:e1:6e:62:0f:01:b5 (ECDSA) |_ 256 33:c1:89:ea:59:73:b1:78:84:38:a4:21:10:0c:91:d8 (ED25519) 80/tcp open http Apache httpd 2.4.29 ((Ubuntu)) | http-cookie-flags: | /: | PHPSESSID: |_ httponly flag not set |_http-server-header: Apache/2.4.29 (Ubuntu) | http-title: Previse Login |_Requested resource was login." />
+22/tcp open ssh OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0) | ssh-hostkey: | 2048 53:ed:44:40:11:6e:8b:da:69:85:79:c0:81:f2:3a:12 (RSA) | 256 bc:54:20:ac:17:23:bb:50:20:f4:e1:6e:62:0f:01:b5 (ECDSA) |_ 256 33:c1:89:ea:59:73:b1:78:84:38:a4:21:10:0c:91:d8 (ED25519) 80/tcp open http Apache httpd 2." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://harshitm98.github.io/posts/htb-machine-previse/" /><meta property="og:image" content="https://harshitm98.github.io/"/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2021-12-25T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2021-12-25T00:00:00&#43;00:00" /><meta property="og:site_name" content="Harshit Maheshwari" />
+<meta property="article:published_time" content="2022-01-08T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2022-01-08T00:00:00&#43;00:00" /><meta property="og:site_name" content="Harshit Maheshwari" />
 
 
 
@@ -75,7 +79,7 @@ PORT STATE SERVICE REASON 22/tcp open ssh syn-ack 80/tcp open http syn-ack Servi
 
 
 
-    <meta property="article:published_time" content="2021-12-25 00:00:00 &#43;0000 UTC" />
+    <meta property="article:published_time" content="2022-01-08 00:00:00 &#43;0000 UTC" />
 
 
 
@@ -182,6 +186,7 @@ if (!doNotTrack) {
 
       <div class="post-content">
         <h1 id="enumeration">Enumeration</h1>
+<p>Let&rsquo;s kick off with some initial enumeration. We will run nmap scans to see what ports are open and what services are running on the open ports.</p>
 <h2 id="initial-enumeration">Initial Enumeration</h2>
 <h4 id="nmap-scans">Nmap Scans</h4>
 <p>Initial:</p>
@@ -204,6 +209,7 @@ if (!doNotTrack) {
 |_Requested resource was login.php
 Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 </code></pre></div><h2 id="enumeration-port-80">Enumeration: Port 80</h2>
+<p>Now we know that port 80 is open, let&rsquo;s fuzz to find if there any hidden directories or files.</p>
 <h4 id="ffuf">Ffuf</h4>
 <p>common.txt</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">                        [Status: 200, Size: 2224, Words: 486, Lines: 54]
@@ -366,7 +372,7 @@ gzip -c /var/www/file_access.log &gt; /var/backups/<span style="color:#66d9ef">$
           <line x1="16" y1="17" x2="8" y2="17"></line>
           <polyline points="10 9 9 9 8 9"></polyline>
         </svg>
-        762 Words
+        808 Words
       </p>
 
       <p>
@@ -377,7 +383,7 @@ gzip -c /var/www/file_access.log &gt; /var/backups/<span style="color:#66d9ef">$
           <line x1="3" y1="10" x2="21" y2="10"></line>
         </svg>
         
-          2021-12-24 19:00
+          2022-01-07 19:00
         
 
          
@@ -489,17 +495,17 @@ gzip -c /var/www/file_access.log &gt; /var/backups/<span style="color:#66d9ef">$
         <div class="pagination__buttons">
             
             <span class="button previous">
-                <a href="https://harshitm98.github.io/posts/htb-challenge-templated/">
+                <a href="https://harshitm98.github.io/posts/htb-machine-horizontall/">
                     <span class="button__icon">←</span>
-                    <span class="button__text">HTB Templated - Writeup</span>
+                    <span class="button__text">HTB Horizontall - Writeup</span>
                 </a>
             </span>
             
 
             
             <span class="button next">
-                <a href="https://harshitm98.github.io/posts/htb-machine-cap/">
-                    <span class="button__text">HTB Cap - Writeup</span>
+                <a href="https://harshitm98.github.io/posts/htb-challenge-gunship/">
+                    <span class="button__text">HTB Gunship - Writeup</span>
                     <span class="button__icon">→</span>
                 </a>
             </span>

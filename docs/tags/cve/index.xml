@@ -7,11 +7,11 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
-    <lastBuildDate>Tue, 04 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://harshitm98.github.io/tags/cve/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 20 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://harshitm98.github.io/tags/cve/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>HTB Horizontall - Writeup</title>
       <link>https://harshitm98.github.io/posts/htb-machine-horizontall/</link>
-      <pubDate>Tue, 04 Jan 2022 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 20 Jan 2022 00:00:00 +0000</pubDate>
       
       <guid>https://harshitm98.github.io/posts/htb-machine-horizontall/</guid>
       <description>Enumeration Before we start enumeration, let&amp;rsquo;s add IP 10.10.11.105 to /etc/hosts as horizontall.htb
