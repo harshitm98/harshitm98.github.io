@@ -5,9 +5,9 @@
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="author" content="">
-<meta name="description" content="HTB Challenge - Reminiscent Note: Before you begin, majority of this writeup uses volality3.0, so make sure you downloaded and have it setup on your system.
+<meta name="description" content="Note: Before you begin, majority of this writeup uses volality3.0, so make sure you downloaded and have it setup on your system.
 Setup  First download the zip file and unzip the contents. We have a file flounder-pc.memdump.elf and another file imageinfo.txt.  imageinfo.txt
-Suggested Profile(s) : Win7SP1x64, Win7SP0x64, Win2008R2SP0x64, Win2008R2SP1x64_23418, Win2008R2SP1x64, Win7SP1x64_23418 AS Layer1 : WindowsAMD64PagedMemory (Kernel AS) AS Layer2 : VirtualBoxCoreDumpElf64 (Unnamed AS) AS Layer3 : FileAddressSpace (/home/infosec/dumps/mem_dumps/01/flounder-pc-memdump." />
+Suggested Profile(s) : Win7SP1x64, Win7SP0x64, Win2008R2SP0x64, Win2008R2SP1x64_23418, Win2008R2SP1x64, Win7SP1x64_23418 AS Layer1 : WindowsAMD64PagedMemory (Kernel AS) AS Layer2 : VirtualBoxCoreDumpElf64 (Unnamed AS) AS Layer3 : FileAddressSpace (/home/infosec/dumps/mem_dumps/01/flounder-pc-memdump.elf) PAE type : No PAE DTB : 0x187000L KDBG : 0xf800027fe0a0L Number of Processors : 2 Image Type (Service Pack) : 1 KPCR for CPU 0 : 0xfffff800027ffd00L KPCR for CPU 1 : 0xfffff880009eb000L KUSER_SHARED_DATA : 0xfffff78000000000L Image date and time : 2017-10-04 18:07:30 UTC&#43;0000 Image local date and time : 2017-10-04 11:07:30 -0700 This file gives us the suggested profiles that we may need while running volatility." />
 <meta name="keywords" content=", hackthebox, challenges, forensics, volatility, writeup" />
 <meta name="robots" content="noodp" />
 <meta name="theme-color" content="" />
@@ -43,27 +43,27 @@ Suggested Profile(s) : Win7SP1x64, Win7SP0x64, Win2008R2SP0x64, Win2008R2SP1x64_
 
 
 <meta itemprop="name" content="HTB Reminiscent - Writeup">
-<meta itemprop="description" content="HTB Challenge - Reminiscent Note: Before you begin, majority of this writeup uses volality3.0, so make sure you downloaded and have it setup on your system.
+<meta itemprop="description" content="Note: Before you begin, majority of this writeup uses volality3.0, so make sure you downloaded and have it setup on your system.
 Setup  First download the zip file and unzip the contents. We have a file flounder-pc.memdump.elf and another file imageinfo.txt.  imageinfo.txt
-Suggested Profile(s) : Win7SP1x64, Win7SP0x64, Win2008R2SP0x64, Win2008R2SP1x64_23418, Win2008R2SP1x64, Win7SP1x64_23418 AS Layer1 : WindowsAMD64PagedMemory (Kernel AS) AS Layer2 : VirtualBoxCoreDumpElf64 (Unnamed AS) AS Layer3 : FileAddressSpace (/home/infosec/dumps/mem_dumps/01/flounder-pc-memdump."><meta itemprop="datePublished" content="2022-04-05T00:00:00&#43;00:00" />
+Suggested Profile(s) : Win7SP1x64, Win7SP0x64, Win2008R2SP0x64, Win2008R2SP1x64_23418, Win2008R2SP1x64, Win7SP1x64_23418 AS Layer1 : WindowsAMD64PagedMemory (Kernel AS) AS Layer2 : VirtualBoxCoreDumpElf64 (Unnamed AS) AS Layer3 : FileAddressSpace (/home/infosec/dumps/mem_dumps/01/flounder-pc-memdump.elf) PAE type : No PAE DTB : 0x187000L KDBG : 0xf800027fe0a0L Number of Processors : 2 Image Type (Service Pack) : 1 KPCR for CPU 0 : 0xfffff800027ffd00L KPCR for CPU 1 : 0xfffff880009eb000L KUSER_SHARED_DATA : 0xfffff78000000000L Image date and time : 2017-10-04 18:07:30 UTC&#43;0000 Image local date and time : 2017-10-04 11:07:30 -0700 This file gives us the suggested profiles that we may need while running volatility."><meta itemprop="datePublished" content="2022-04-05T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2022-04-05T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="1771"><meta itemprop="image" content="https://harshitm98.github.io/"/>
+<meta itemprop="wordCount" content="1767"><meta itemprop="image" content="https://harshitm98.github.io/"/>
 <meta itemprop="keywords" content="hackthebox,challenges,forensics,volatility,writeup," />
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://harshitm98.github.io/"/>
 
 <meta name="twitter:title" content="HTB Reminiscent - Writeup"/>
-<meta name="twitter:description" content="HTB Challenge - Reminiscent Note: Before you begin, majority of this writeup uses volality3.0, so make sure you downloaded and have it setup on your system.
+<meta name="twitter:description" content="Note: Before you begin, majority of this writeup uses volality3.0, so make sure you downloaded and have it setup on your system.
 Setup  First download the zip file and unzip the contents. We have a file flounder-pc.memdump.elf and another file imageinfo.txt.  imageinfo.txt
-Suggested Profile(s) : Win7SP1x64, Win7SP0x64, Win2008R2SP0x64, Win2008R2SP1x64_23418, Win2008R2SP1x64, Win7SP1x64_23418 AS Layer1 : WindowsAMD64PagedMemory (Kernel AS) AS Layer2 : VirtualBoxCoreDumpElf64 (Unnamed AS) AS Layer3 : FileAddressSpace (/home/infosec/dumps/mem_dumps/01/flounder-pc-memdump."/>
+Suggested Profile(s) : Win7SP1x64, Win7SP0x64, Win2008R2SP0x64, Win2008R2SP1x64_23418, Win2008R2SP1x64, Win7SP1x64_23418 AS Layer1 : WindowsAMD64PagedMemory (Kernel AS) AS Layer2 : VirtualBoxCoreDumpElf64 (Unnamed AS) AS Layer3 : FileAddressSpace (/home/infosec/dumps/mem_dumps/01/flounder-pc-memdump.elf) PAE type : No PAE DTB : 0x187000L KDBG : 0xf800027fe0a0L Number of Processors : 2 Image Type (Service Pack) : 1 KPCR for CPU 0 : 0xfffff800027ffd00L KPCR for CPU 1 : 0xfffff880009eb000L KUSER_SHARED_DATA : 0xfffff78000000000L Image date and time : 2017-10-04 18:07:30 UTC&#43;0000 Image local date and time : 2017-10-04 11:07:30 -0700 This file gives us the suggested profiles that we may need while running volatility."/>
 
 
 
 
     <meta property="og:title" content="HTB Reminiscent - Writeup" />
-<meta property="og:description" content="HTB Challenge - Reminiscent Note: Before you begin, majority of this writeup uses volality3.0, so make sure you downloaded and have it setup on your system.
+<meta property="og:description" content="Note: Before you begin, majority of this writeup uses volality3.0, so make sure you downloaded and have it setup on your system.
 Setup  First download the zip file and unzip the contents. We have a file flounder-pc.memdump.elf and another file imageinfo.txt.  imageinfo.txt
-Suggested Profile(s) : Win7SP1x64, Win7SP0x64, Win2008R2SP0x64, Win2008R2SP1x64_23418, Win2008R2SP1x64, Win7SP1x64_23418 AS Layer1 : WindowsAMD64PagedMemory (Kernel AS) AS Layer2 : VirtualBoxCoreDumpElf64 (Unnamed AS) AS Layer3 : FileAddressSpace (/home/infosec/dumps/mem_dumps/01/flounder-pc-memdump." />
+Suggested Profile(s) : Win7SP1x64, Win7SP0x64, Win2008R2SP0x64, Win2008R2SP1x64_23418, Win2008R2SP1x64, Win7SP1x64_23418 AS Layer1 : WindowsAMD64PagedMemory (Kernel AS) AS Layer2 : VirtualBoxCoreDumpElf64 (Unnamed AS) AS Layer3 : FileAddressSpace (/home/infosec/dumps/mem_dumps/01/flounder-pc-memdump.elf) PAE type : No PAE DTB : 0x187000L KDBG : 0xf800027fe0a0L Number of Processors : 2 Image Type (Service Pack) : 1 KPCR for CPU 0 : 0xfffff800027ffd00L KPCR for CPU 1 : 0xfffff880009eb000L KUSER_SHARED_DATA : 0xfffff78000000000L Image date and time : 2017-10-04 18:07:30 UTC&#43;0000 Image local date and time : 2017-10-04 11:07:30 -0700 This file gives us the suggested profiles that we may need while running volatility." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://harshitm98.github.io/posts/htb-challenge-reminiscent/" /><meta property="og:image" content="https://harshitm98.github.io/"/><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2022-04-05T00:00:00&#43;00:00" />
@@ -181,8 +181,7 @@ if (!doNotTrack) {
       
 
       <div class="post-content">
-        <h1 id="htb-challenge---reminiscent">HTB Challenge - Reminiscent</h1>
-<p><em>Note: Before you begin, majority of this writeup uses <a href="https://github.com/volatilityfoundation/volatility3">volality3.0</a>, so make sure you downloaded and have it setup on your system.</em></p>
+        <p><em>Note: Before you begin, majority of this writeup uses <a href="https://github.com/volatilityfoundation/volatility3">volality3.0</a>, so make sure you downloaded and have it setup on your system.</em></p>
 <h3 id="setup">Setup</h3>
 <ul>
 <li>First download the zip file and unzip the contents.</li>
@@ -401,7 +400,7 @@ $GroUPPOLiCYSEttINGs <span style="color:#f92672">=</span> <span style="color:#f9
           <line x1="16" y1="17" x2="8" y2="17"></line>
           <polyline points="10 9 9 9 8 9"></polyline>
         </svg>
-        1771 Words
+        1767 Words
       </p>
 
       <p>

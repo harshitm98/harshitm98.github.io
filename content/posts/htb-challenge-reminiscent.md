@@ -5,8 +5,6 @@ draft: false
 tags: ["hackthebox", "challenges", "forensics", "volatility", "writeup"]
 ---
 
-# HTB Challenge - Reminiscent
-
 *Note: Before you begin, majority of this writeup uses [volality3.0](https://github.com/volatilityfoundation/volatility3), so make sure you downloaded and have it setup on your system.*
 
 ### Setup
