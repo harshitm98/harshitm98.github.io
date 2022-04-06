@@ -7,7 +7,18 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
-    <lastBuildDate>Thu, 20 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://harshitm98.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 05 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://harshitm98.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>HTB Reminiscent - Writeup</title>
+      <link>https://harshitm98.github.io/posts/htb-challenge-reminiscent/</link>
+      <pubDate>Tue, 05 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://harshitm98.github.io/posts/htb-challenge-reminiscent/</guid>
+      <description>HTB Challenge - Reminiscent Note: Before you begin, majority of this writeup uses volality3.0, so make sure you downloaded and have it setup on your system.
+Setup  First download the zip file and unzip the contents. We have a file flounder-pc.memdump.elf and another file imageinfo.txt.  imageinfo.txt
+Suggested Profile(s) : Win7SP1x64, Win7SP0x64, Win2008R2SP0x64, Win2008R2SP1x64_23418, Win2008R2SP1x64, Win7SP1x64_23418 AS Layer1 : WindowsAMD64PagedMemory (Kernel AS) AS Layer2 : VirtualBoxCoreDumpElf64 (Unnamed AS) AS Layer3 : FileAddressSpace (/home/infosec/dumps/mem_dumps/01/flounder-pc-memdump.</description>
+    </item>
+    
     <item>
       <title>HTB Horizontall - Writeup</title>
       <link>https://harshitm98.github.io/posts/htb-machine-horizontall/</link>

